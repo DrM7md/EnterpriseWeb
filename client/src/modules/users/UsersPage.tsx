@@ -43,12 +43,12 @@ export function UsersPage() {
   const columns: Column<UserListItem>[] = [
     { key: 'fullName', header: t('users.col.name'), sortable: true, render: (u) => <span className="font-medium">{u.fullName}</span> },
     { key: 'email', header: t('users.col.email'), sortable: true, render: (u) => <span className="text-muted">{u.email}</span> },
-    { key: 'unitName', header: t('users.col.unit'), render: (u) => u.unitName },
-    { key: 'roles', header: t('users.col.roles'), render: (u) => u.roles.join(i18n.language === 'ar' ? '، ' : ', ') || '—' },
-    { key: 'isActive', header: t('users.col.status'), render: (u) => (
+    { key: 'unitName', header: t('users.col.unit'), hideable: true, render: (u) => u.unitName },
+    { key: 'roles', header: t('users.col.roles'), hideable: true, render: (u) => u.roles.join(i18n.language === 'ar' ? '، ' : ', ') || '—' },
+    { key: 'isActive', header: t('users.col.status'), hideable: true, render: (u) => (
         <Badge variant={u.isActive ? 'success' : 'danger'}>{u.isActive ? t('common.active') : t('common.inactive')}</Badge>
       ) },
-    { key: 'createdAtUtc', header: t('users.col.created'), sortable: true, render: (u) => new Date(u.createdAtUtc).toLocaleDateString(i18n.language) },
+    { key: 'createdAtUtc', header: t('users.col.created'), sortable: true, hideable: true, render: (u) => new Date(u.createdAtUtc).toLocaleDateString(i18n.language) },
   ];
 
   return (
@@ -76,6 +76,7 @@ export function UsersPage() {
       {asyncMsg && <p className="rounded-lg border border-accent bg-[var(--notice-bg)] px-3.5 py-2.5 text-[0.8125rem]">{asyncMsg}</p>}
 
       <DataTable
+        tableId="users" views={['table', 'cards']}
         columns={columns} rows={data?.items ?? []} rowKey={(u) => u.id}
         isLoading={isLoading} isError={isError} sortBy={sortBy} sortDescending={sortDescending} onSort={onSort}
         rowActions={(u) => (

@@ -51,7 +51,7 @@
 - ✅ Loading/Empty/Error states · إخفاء الإجراءات حسب الصلاحية · i18n + RTL.
 - ✅ **سمات (فاتح/داكن)** عبر `data-theme` + tokens CSS · تفضيلات (نمط النماذج drawer/modal) · صفحة إعدادات قابلة للتوسعة.
 - ✅ **Tailwind v4 + shadcn-style primitives** (Button/Input/Badge/Card بـ cva) + **Lucide icons** — مدمجة مع نظام السمة (tokens تشير لمتغيّرات `data-theme`).
-- ✅ **Command Palette (⌘K)** (cmdk: تنقّل + إجراءات) · ✅ **Virtualization** (TanStack Virtual — شجرة الوحدات، primitive `VirtualList`).
+- ✅ **Command Palette (⌘K)** (cmdk) · ✅ **Virtualization** (TanStack Virtual) · ✅ **DataGrid: تخصيص الأعمدة + عرض جدول/بطاقات + حفظ التفضيل** · ✅ **سايدبار قابل للطي + قوائم فرعية (submenu)**.
 
 ## الجودة والتسليم
 - ✅ 35 اختبارًا أخضر · CI (GitHub Actions) · Docker multi-stage · docker-compose.

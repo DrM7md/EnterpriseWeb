@@ -6,6 +6,7 @@ import { OrgUnitsPage } from '../modules/orgunits/OrgUnitsPage';
 import { UsersPage } from '../modules/users/UsersPage';
 import { SettingsPage } from '../modules/settings/SettingsPage';
 import { SETTINGS_SECTIONS } from '../modules/settings/settings.config';
+import { PlaceholderPage } from '../components/PlaceholderPage';
 import { useAuthStore } from '../store/authStore';
 
 /** يحرس المسارات الخاصّة: غير المُصادق يُعاد للدخول. */
@@ -24,6 +25,15 @@ export const router = createBrowserRouter([
       { path: 'users', element: <UsersPage /> },
       { path: 'roles', element: <RolesPage /> },
       { path: 'org-units', element: <OrgUnitsPage /> },
+      {
+        path: 'guidance',
+        children: [
+          { index: true, element: <Navigate to="/guidance/supervisors" replace /> },
+          { path: 'supervisors', element: <PlaceholderPage titleKey="nav.guidance.supervisors" descKey="guidance.supervisorsDesc" /> },
+          { path: 'visits', element: <PlaceholderPage titleKey="nav.guidance.visits" descKey="guidance.visitsDesc" /> },
+          { path: 'reports', element: <PlaceholderPage titleKey="nav.guidance.reports" descKey="guidance.reportsDesc" /> },
+        ],
+      },
       {
         path: 'settings',
         children: [

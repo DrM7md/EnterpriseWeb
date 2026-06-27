@@ -31,9 +31,9 @@ export function RolesPage() {
     { key: 'name', header: t('roles.col.role'), sortable: true, render: (r) => (
         <span className="inline-flex items-center gap-2 font-medium">{r.name}{r.isSystem && <Badge variant="system">{t('common.system')}</Badge>}</span>
       ) },
-    { key: 'description', header: t('roles.col.description'), render: (r) => <span className="text-muted">{r.description || '—'}</span> },
-    { key: 'permissionCount', header: t('roles.col.permissions'), render: (r) => r.permissionCount },
-    { key: 'createdAtUtc', header: t('roles.col.created'), sortable: true, render: (r) => new Date(r.createdAtUtc).toLocaleDateString(i18n.language) },
+    { key: 'description', header: t('roles.col.description'), hideable: true, render: (r) => <span className="text-muted">{r.description || '—'}</span> },
+    { key: 'permissionCount', header: t('roles.col.permissions'), hideable: true, render: (r) => r.permissionCount },
+    { key: 'createdAtUtc', header: t('roles.col.created'), sortable: true, hideable: true, render: (r) => new Date(r.createdAtUtc).toLocaleDateString(i18n.language) },
   ];
 
   return (
@@ -50,6 +50,7 @@ export function RolesPage() {
         onChange={(e) => { setSearch(e.target.value); setPage(1); }} />
 
       <DataTable
+        tableId="roles" views={['table', 'cards']}
         columns={columns} rows={data?.items ?? []} rowKey={(r) => r.id} isLoading={isLoading} isError={isError}
         rowActions={(r) => (
           <div className="flex gap-1">

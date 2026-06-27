@@ -14,11 +14,13 @@ interface PreferencesState {
   fontFamily: FontFamily;
   fontSize: FontSize;
   addPattern: AddPattern;
+  sidebarCollapsed: boolean;
   setTheme: (theme: Theme) => void;
   toggleTheme: () => void;
   setFontFamily: (font: FontFamily) => void;
   setFontSize: (size: FontSize) => void;
   setAddPattern: (pattern: AddPattern) => void;
+  toggleSidebar: () => void;
   /** يطبّق كل التفضيلات على المستند (يُستدعى عند الإقلاع). */
   apply: () => void;
 }
@@ -30,11 +32,13 @@ export const usePreferencesStore = create<PreferencesState>()(
       fontFamily: 'plex',
       fontSize: 'md',
       addPattern: 'drawer',
+      sidebarCollapsed: false,
       setTheme: (theme) => { applyTheme(theme); set({ theme }); },
       toggleTheme: () => get().setTheme(get().theme === 'dark' ? 'light' : 'dark'),
       setFontFamily: (fontFamily) => { applyFontFamily(fontFamily); set({ fontFamily }); },
       setFontSize: (fontSize) => { applyFontSize(fontSize); set({ fontSize }); },
       setAddPattern: (addPattern) => set({ addPattern }),
+      toggleSidebar: () => set((s) => ({ sidebarCollapsed: !s.sidebarCollapsed })),
       apply: () => {
         const s = get();
         applyTheme(s.theme);

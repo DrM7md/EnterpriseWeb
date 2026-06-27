@@ -22,6 +22,7 @@
     "refreshing": "refreshing",
     "close": "Close",
     "actions": "Actions",
+    "comingSoon": "This section is under construction and will be added later.",
     "language": "العربية",
     "toggleTheme": "Toggle theme",
     "back": "Back"
@@ -30,7 +31,24 @@
     "users": "Users",
     "roles": "Roles",
     "orgUnits": "Org Units",
-    "settings": "Settings"
+    "settings": "Settings",
+    "collapse": "Collapse/expand menu",
+    "guidance": {
+      "title": "Educational Guidance",
+      "supervisors": "Supervisors",
+      "visits": "Supervisory Visits",
+      "reports": "Guidance Reports"
+    }
+  },
+  "guidance": {
+    "supervisorsDesc": "Manage educational supervisors and their assignments.",
+    "visitsDesc": "Schedule and record supervisory school visits.",
+    "reportsDesc": "Educational guidance performance reports."
+  },
+  "table": {
+    "columns": "Columns",
+    "viewTable": "Table view",
+    "viewCards": "Cards view"
   },
   "palette": {
     "title": "Command palette",
