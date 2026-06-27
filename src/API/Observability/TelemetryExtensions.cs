@@ -39,6 +39,7 @@ public static class TelemetryExtensions
                     .AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
                     .AddRuntimeInstrumentation()
+                    .AddMeter("EnterpriseSystem.Cache") // عدّادات كاش التطبيق (hits/misses)
                     .AddPrometheusExporter();
 
                 if (!string.IsNullOrWhiteSpace(otlpEndpoint))

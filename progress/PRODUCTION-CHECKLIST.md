@@ -42,7 +42,8 @@
 - ✅ Response Compression (Brotli) · Lazy/Projection · منع N+1.
 - ✅ **Load test تحت تزامن** (50/100): ~900K طلب · 0 أخطاء · p95 مُركّب ~10–20ms (هامش 20× عن SLO 400ms) — LocalDB/جهاز تطوير. التفاصيل: `brain/11`.
 - ✅ حدود معدّل قابلة للضبط (`RateLimit:*`).
-- ⬜ **Output/Response Caching** مع invalidation للقراءات القابلة للتخزين · إعادة القياس على Azure SQL إنتاجي.
+- ✅ **Caching على مستوى التطبيق** (شجرة الوحدات + كتالوج الصلاحيات) مع **invalidation عند الكتابة** + عدّادات OTel (hits/misses في `/metrics`). آمن (يبقى التصريح فعّالًا).
+- ⬜ إعادة قياس الأداء على Azure SQL إنتاجي · توسيع caching حسب الحاجة (مع keying للبيانات المُجزّأة).
 
 ## الواجهة (Frontend)
 - ✅ React + TS strict · TanStack Query · Zustand · RHF + Zod · Router + حارس مصادقة.

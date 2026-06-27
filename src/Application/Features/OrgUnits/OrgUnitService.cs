@@ -18,9 +18,15 @@ public interface IOrgUnitService
 /// موديول الوحدات التنظيمية — نمط شجري (مسار مادي Path). أساس العزل: الوحدات تملك السجلات.
 /// إنشاء الوحدة يحسب مسارها من الأمّ؛ الحذف محميّ (لا وحدة لها أبناء أو مستخدمون).
 /// </summary>
-internal sealed class OrgUnitService(IAppDbContext db) : IOrgUnitService
+internal sealed class OrgUnitService(IAppDbContext db, IAppCache cache) : IOrgUnitService
 {
-    public async Task<IReadOnlyList<OrgUnitListItem>> GetTreeAsync(CancellationToken ct = default)
+    private static readonly TimeSpan TreeTtl = TimeSpan.FromMinutes(5);
+
+    public Task<IReadOnlyList<OrgUnitListItem>> GetTreeAsync(CancellationToken ct = default)
+        // الشجرة عامّة (غير مُجزّأة بالمستخدم) وتتغيّر فقط عند الكتابة ⇒ تُخزَّن وتُبطَل عند الكتابة.
+        => cache.GetOrCreateAsync(CacheKeys.OrgUnitTree, BuildTreeAsync, TreeTtl, ct);
+
+    private async Task<IReadOnlyList<OrgUnitListItem>> BuildTreeAsync(CancellationToken ct)
     {
         var units = await db.OrgUnits.AsNoTracking().OrderBy(u => u.Path).ToListAsync(ct);
 
@@ -73,6 +79,7 @@ internal sealed class OrgUnitService(IAppDbContext db) : IOrgUnitService
         // المسار المادي يُحسب بعد توليد المفتاح: مسار الأمّ + معرّف الوحدة.
         unit.Path = $"{parentPath}{unit.Id}/";
         await db.SaveChangesAsync(ct);
+        cache.Remove(CacheKeys.OrgUnitTree);
         return unit.Id;
     }
 
@@ -85,6 +92,7 @@ internal sealed class OrgUnitService(IAppDbContext db) : IOrgUnitService
         unit.Name = request.Name.Trim();
         unit.IsActive = request.IsActive;
         await db.SaveChangesAsync(ct);
+        cache.Remove(CacheKeys.OrgUnitTree);
         return Result.Success();
     }
 
@@ -101,6 +109,7 @@ internal sealed class OrgUnitService(IAppDbContext db) : IOrgUnitService
 
         db.OrgUnits.Remove(unit); // حذف ناعم عبر الـ interceptor.
         await db.SaveChangesAsync(ct);
+        cache.Remove(CacheKeys.OrgUnitTree);
         return Result.Success();
     }
 }

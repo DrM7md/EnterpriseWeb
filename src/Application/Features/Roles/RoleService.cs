@@ -20,8 +20,10 @@ public interface IRoleService
 /// موديول الأدوار — مبنيٌّ بقالب الموديول (brain/10). الأدوار على مستوى الوزارة (لا عزل).
 /// أدوار النظام محميّة من التعديل/الحذف. الصلاحيات كتالوج ثابت يُبذَّر.
 /// </summary>
-internal sealed class RoleService(IAppDbContext db) : IRoleService
+internal sealed class RoleService(IAppDbContext db, IAppCache cache) : IRoleService
 {
+    private static readonly TimeSpan CatalogTtl = TimeSpan.FromHours(1);
+
     public async Task<Result<PagedResult<RoleListItem>>> ListAsync(PagedRequest request, CancellationToken ct = default)
     {
         var query = db.Roles.AsNoTracking();
@@ -124,11 +126,13 @@ internal sealed class RoleService(IAppDbContext db) : IRoleService
         return Result.Success();
     }
 
-    public async Task<IReadOnlyList<PermissionItem>> GetPermissionCatalogAsync(CancellationToken ct = default) =>
-        await db.Permissions.AsNoTracking()
-            .OrderBy(p => p.Module).ThenBy(p => p.Code)
-            .Select(p => new PermissionItem(p.Id, p.Code, p.Module, p.Description))
-            .ToListAsync(ct);
+    public Task<IReadOnlyList<PermissionItem>> GetPermissionCatalogAsync(CancellationToken ct = default) =>
+        // كتالوج ثابت (يُبذَّر فقط) ⇒ يُخزَّن طويلًا بلا حاجة لإبطال.
+        cache.GetOrCreateAsync(CacheKeys.PermissionCatalog, async token =>
+            (IReadOnlyList<PermissionItem>)await db.Permissions.AsNoTracking()
+                .OrderBy(p => p.Module).ThenBy(p => p.Code)
+                .Select(p => new PermissionItem(p.Id, p.Code, p.Module, p.Description))
+                .ToListAsync(token), CatalogTtl, ct);
 
     private async Task<Result<List<long>>> ResolvePermissionsAsync(IReadOnlyList<long>? ids, CancellationToken ct)
     {

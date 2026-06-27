@@ -43,6 +43,15 @@
 - مُتحقَّق e2e: enqueue 202 → poll Processing→Completed(rows=3) → download (Excel صالح، أكّده `file`).
 - **إشعار عند الجاهزية:** حاليًا polling؛ إشعار لحظي (SignalR) لاحقًا.
 
+## التخزين المؤقت (Caching) — ✅ مُنفّذ
+- **على مستوى التطبيق** (لا HTTP) عبر `IAppCache` (IMemoryCache) — يبقي التصريح فعّالًا (الـ endpoint يُنفَّذ، يُخزَّن ناتج الاستعلام فقط). تجنّب ثغرة تجاوز التصريح في output caching للمسارات المُصرَّح عليها.
+- المُخزَّن (قراءات عامّة غير مُجزّأة بالمستخدم):
+  - **شجرة الوحدات** (`org-units:tree`، TTL 5د) — **تُبطَل عند create/update/delete**.
+  - **كتالوج الصلاحيات** (`roles:permissions:catalog`، TTL 1س) — ثابت، بلا إبطال.
+- **بوابة الموديول** (`IsEnabled`) مُخزَّنة سلفًا (TTL 60ث + إبطال عند التبديل).
+- **مُلاحَظ عبر OTel:** عدّادات `app_cache_hits`/`app_cache_misses` (Meter `EnterpriseSystem.Cache`) في `/metrics`.
+- مُتحقَّق: 5 قراءات = 1 miss + 4 hits؛ وبعد create تظهر الوحدة فورًا (إبطال صحيح).
+
 ## المراقبة (OpenTelemetry) — ✅ مُنفّذ
 - **Traces:** instrumentation لـ AspNetCore (HTTP server spans + route) · HttpClient · SqlClient (DB spans).
 - **Metrics:** AspNetCore + HttpClient + Runtime عبر **Prometheus** على `/metrics` (سحب).

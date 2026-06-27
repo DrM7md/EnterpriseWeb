@@ -2,6 +2,7 @@ using Application.Common.Abstractions;
 using Application.Common.Reporting;
 using Application.Common.Security;
 using Application.Features.Reports;
+using Infrastructure.Caching;
 using Infrastructure.Identity;
 using Infrastructure.Persistence;
 using Infrastructure.Persistence.Interceptors;
@@ -43,6 +44,7 @@ public static class DependencyInjection
         });
         services.AddScoped<IAppDbContext>(sp => sp.GetRequiredService<AppDbContext>());
         services.AddScoped<IIdempotencyStore, IdempotencyStore>();
+        services.AddSingleton<IAppCache, AppCache>();
 
         services.AddScoped<ISystemInfoService, SystemInfoService>();
 
