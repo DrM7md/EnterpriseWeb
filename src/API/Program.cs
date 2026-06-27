@@ -142,6 +142,7 @@ try
     app.UseRateLimiter();
     app.UseAuthentication();
     app.UseAuthorization();
+    app.UseMiddleware<IdempotencyMiddleware>(); // بعد المصادقة (يحتاج هوية المستخدم)
 
     // Health probes + مقاييس Prometheus (/metrics).
     app.MapHealthChecks("/health/live");

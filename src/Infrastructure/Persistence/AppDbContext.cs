@@ -26,6 +26,7 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options, ICurren
     public DbSet<Module> Modules => Set<Module>();
     public DbSet<ModuleSetting> ModuleSettings => Set<ModuleSetting>();
     public DbSet<ReportRequest> ReportRequests => Set<ReportRequest>();
+    public DbSet<IdempotencyRecord> IdempotencyRecords => Set<IdempotencyRecord>();
 
     /// <summary>نطاق العزل الحالي — يُقرأ داخل Global Query Filter (يُعاد تقييمه لكل استعلام).</summary>
     public IReadOnlyCollection<long> CurrentUnitScope => currentUser.UnitScope;

@@ -19,6 +19,8 @@
 - **AuditLogs** — (EntityName, EntityId, Action, ChangesJson, UserId, OwnerUnitId, CorrelationId, TimestampUtc). فهارس على (EntityName,EntityId) و TimestampUtc.
 - **Modules** — كتالوج الموديولات (`Key` unique، `IsCore`). ✅ Phase 4.
 - **ModuleSettings** — علم تفعيل لكل وحدة (`ModuleId`+`OwnerUnitId` unique، `IsEnabled`، `ConfigJson`). معزول بـ RLS. ✅ Phase 4.
+- **ReportRequests** — طلبات تقارير غير متزامنة (معزولة، تحمل النطاق + الحالة + FileKey). ✅
+- **IdempotencyRecords** — استجابات الكتابات بمفتاح idempotency (`Key`+`UserId` unique). ✅
 
 كل الكيانات القابلة للحذف تحمل `IsDeleted`/`DeletedAtUtc`/`DeletedBy` + `RowVersion` للتزامن.
 

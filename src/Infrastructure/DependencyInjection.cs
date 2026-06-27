@@ -42,6 +42,7 @@ public static class DependencyInjection
             options.AddInterceptors(sp.GetRequiredService<AuditingInterceptor>());
         });
         services.AddScoped<IAppDbContext>(sp => sp.GetRequiredService<AppDbContext>());
+        services.AddScoped<IIdempotencyStore, IdempotencyStore>();
 
         services.AddScoped<ISystemInfoService, SystemInfoService>();
 

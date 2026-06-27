@@ -148,6 +148,20 @@ public sealed class ReportRequestConfiguration : IEntityTypeConfiguration<Report
     }
 }
 
+public sealed class IdempotencyRecordConfiguration : IEntityTypeConfiguration<IdempotencyRecord>
+{
+    public void Configure(EntityTypeBuilder<IdempotencyRecord> b)
+    {
+        b.ToTable("IdempotencyRecords");
+        b.HasKey(x => x.Id);
+        b.Property(x => x.Key).HasMaxLength(120).IsRequired();
+        b.Property(x => x.Method).HasMaxLength(10).IsRequired();
+        b.Property(x => x.Path).HasMaxLength(400).IsRequired();
+        b.Property(x => x.ContentType).HasMaxLength(120);
+        b.HasIndex(x => new { x.Key, x.UserId }).IsUnique(); // مفتاح فريد لكل مستخدم
+    }
+}
+
 public sealed class AuditLogConfiguration : IEntityTypeConfiguration<AuditLog>
 {
     public void Configure(EntityTypeBuilder<AuditLog> b)

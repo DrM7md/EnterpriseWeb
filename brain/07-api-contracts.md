@@ -4,7 +4,7 @@
 - كل المسارات تحت `/api/v{n}` (يبدأ بـ `v1`). كسر العقد ⇒ `v2`، لا تعديل `v1` القائم.
 - استجابات الخطأ بصيغة **Problem Details** (RFC 7807) عبر `ResultExtensions`.
 - Pagination دائمًا للقوائم (`page`, `pageSize`, ترتيب وفلاتر كـ query params).
-- Idempotency-Key على الكتابات الحرجة (Phase 1+).
+- **Idempotency-Key** (رأس اختياري على الكتابات): إرسال نفس المفتاح مرتين يُرجع الاستجابة الأولى المخزّنة (+ رأس `Idempotency-Replayed: true`) بلا إعادة تنفيذ — مُجزّأ حسب المستخدم.
 
 ## خريطة الأخطاء (ErrorType → HTTP)
 | ErrorType | HTTP |

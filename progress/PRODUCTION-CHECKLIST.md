@@ -16,7 +16,7 @@
 - ✅ تجزئة كلمات المرور (PBKDF2) · رموز التحديث بـ hash.
 - ✅ لا أسرار في الكود (`.gitignore` للأسرار · مفتاح dev فقط في appsettings).
 - 🟡 **CSRF** للمسارات الحسّاسة (نستخدم Bearer لا cookies؛ يُراجَع عند إضافة cookie auth).
-- ⬜ **Idempotency-Keys** على الكتابات الحرجة.
+- ✅ **Idempotency-Keys** على الكتابات (رأس `Idempotency-Key` → middleware يعيد الاستجابة المخزّنة بلا تكرار، مُجزّأ حسب المستخدم).
 - ⬜ Encryption at rest (يُضبَط على مستوى Azure SQL) · أسرار في **Key Vault** (موثّق، يُطبَّق عند النشر).
 
 ## البيانات

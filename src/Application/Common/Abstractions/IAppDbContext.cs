@@ -20,6 +20,7 @@ public interface IAppDbContext
     DbSet<Module> Modules { get; }
     DbSet<ModuleSetting> ModuleSettings { get; }
     DbSet<ReportRequest> ReportRequests { get; }
+    DbSet<IdempotencyRecord> IdempotencyRecords { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }
