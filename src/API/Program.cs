@@ -94,6 +94,7 @@ try
     var v1 = app.MapGroup("/api/v1");
     v1.MapSystemEndpoints();
     v1.MapAuthEndpoints();
+    v1.MapUsersEndpoints();
 
     app.Run();
 }

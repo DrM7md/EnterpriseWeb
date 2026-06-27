@@ -1,4 +1,5 @@
 using Application.Features.Auth;
+using Application.Features.Users;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,6 +15,7 @@ public static class DependencyInjection
     {
         services.AddValidatorsFromAssemblyContaining<LoginRequestValidator>();
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IUserService, UserService>();
         return services;
     }
 }
