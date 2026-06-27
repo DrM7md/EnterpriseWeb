@@ -1,5 +1,17 @@
 # 📝 CHANGELOG
 
+## 2026-06-27 — الإعدادات والتفضيلات: سمة (فاتح/داكن) + نمط النماذج
+**ماذا:** ميزة تفضيلات واجهة (client-state) + صفحة إعدادات قابلة للتوسعة.
+**لماذا:** «dark mode أول درجة» + tokens موحّدة + تخصيص تجربة المستخدم.
+
+- `lib/theme.ts` (data-theme على `<html>` + متغيّرات CSS لكل سمة) + `store/preferencesStore.ts` (Zustand مُخزّن، تطبيق السمة قبل أوّل رسم).
+- `modules/settings/`: صفحة بطاقات + سجلّ أقسام (Appearance: السمة + نمط الإضافة · Dropdowns/Notifications هياكل).
+- `Drawer` يحترم نمط الإضافة (لوح جانبي/نافذة منبثقة) · زر تبديل السمة في `AppShell` · مسارات `/settings/*`.
+- ترجمات AR/EN (parity 102/102).
+
+**التحقّق:** build · lint نظيف · parity 102/102.
+
+
 ## 2026-06-27 — OpenTelemetry (traces + metrics) — إكمال المراقبة
 **ماذا:** مراقبة موزّعة قياسية (OTel) للـ API.
 **لماذا:** إغلاق فجوة Observability في Production Checklist؛ والـ Health Check وحده غير كافٍ.

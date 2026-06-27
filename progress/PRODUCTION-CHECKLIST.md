@@ -47,7 +47,8 @@
 - ✅ React + TS strict · TanStack Query · Zustand · RHF + Zod · Router + حارس مصادقة.
 - ✅ Primitives مُستهلَكة: DataTable · Drawer · FormBuilder (RHF+Zod) · async export.
 - ✅ Loading/Empty/Error states · إخفاء الإجراءات حسب الصلاحية · i18n + RTL.
-- 🟡 **shadcn/ui + Tailwind tokens** (التصميم الحالي CSS مباشر) · DataGrid virtualization · Command Palette.
+- ✅ **سمات (فاتح/داكن)** عبر `data-theme` + tokens CSS · تفضيلات (نمط النماذج drawer/modal) · صفحة إعدادات قابلة للتوسعة.
+- 🟡 **shadcn/ui + Tailwind** (التصميم الحالي tokens CSS منظّمة) · DataGrid virtualization · Command Palette.
 
 ## الجودة والتسليم
 - ✅ 35 اختبارًا أخضر · CI (GitHub Actions) · Docker multi-stage · docker-compose.

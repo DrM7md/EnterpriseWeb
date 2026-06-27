@@ -10,6 +10,7 @@
 | audit | سجل التدقيق (كتابة تلقائية) | ✅ مُنفّذ (Phase 1) — واجهة عرض لاحقًا | core |
 | primitives | DataTable/Drawer/Form (نواة) | 🟡 جزئي — بُنيت أثناء slice الـ Users | — |
 | reporting | محرّك التقارير (Excel/PDF، Strategy) + تقارير غير متزامنة (Hangfire + IFileStorage) | ✅ مُنفّذ — تصدير متزامن وغير متزامن للمستخدمين | — |
+| settings | تفضيلات الواجهة (سمة فاتح/داكن · نمط النماذج) + صفحة إعدادات | ✅ مُنفّذ (client-state) | — |
 | **users** | إدارة المستخدمين (الـ slice الأول، المرجع/Template) | ✅ مُنفّذ end-to-end | per-department |
 | **roles** | الأدوار والصلاحيات (موديول ثانٍ بالقالب) | ✅ مُنفّذ end-to-end | core |
 
