@@ -1,8 +1,13 @@
 # 📍 STATUS — الحالة الحالية
 
-- **المرحلة الحالية:** Phase 5 (توسعة الموديولات) جارية — موديول **Roles** مُنجَز بالقالب.
+- **المرحلة الحالية:** توسعة + primitives — موديولان (Users/Roles) + **محرّك تقارير** (Excel/PDF).
 - **آخر تحديث:** 2026-06-27
-- **التغطية:** Phase 0 ✅ · 1 ✅ · 2 (primitives) جزئيًّا · 3 (Users) ✅ · 4 (Module Registry) ✅ · 5 🟡 (Roles مُنجَز)
+- **التغطية:** Phase 0 ✅ · 1 ✅ · 2 (primitives) 🟡 (DataTable/Drawer/Form + **ReportEngine**) · 3 (Users) ✅ · 4 (Module Registry) ✅ · 5 🟡 (Roles)
+
+## محرّك التقارير (ReportEngine) — مُنجَز
+- primitive `IReportEngine` (Strategy) بصيغتي **Excel (ClosedXML)** و**PDF (QuestPDF، RTL)**.
+- مُستهلَك في **تصدير المستخدمين** (`GET /users/export`) معزولًا حسب النطاق، بصلاحية `users.export`.
+- مُتحقَّق بملفات فعلية صالحة (أكّدها `file` = Excel 2007+ · %PDF). التقارير الثقيلة لاحقًا عبر Hangfire.
 
 ## Phase 5 — إثبات القالب (Roles)
 - موديول **الأدوار والصلاحيات** كامل (backend + frontend) مبنيٌّ بقالب `brain/10`.

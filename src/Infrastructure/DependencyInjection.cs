@@ -1,13 +1,16 @@
 using Application.Common.Abstractions;
+using Application.Common.Reporting;
 using Application.Common.Security;
 using Infrastructure.Identity;
 using Infrastructure.Persistence;
 using Infrastructure.Persistence.Interceptors;
+using Infrastructure.Reporting;
 using Infrastructure.System;
 using Infrastructure.Time;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using QuestPDF.Infrastructure;
 
 namespace Infrastructure;
 
@@ -39,6 +42,12 @@ public static class DependencyInjection
         services.AddScoped<IAppDbContext>(sp => sp.GetRequiredService<AppDbContext>());
 
         services.AddScoped<ISystemInfoService, SystemInfoService>();
+
+        // محرّك التقارير (Strategy: كاتب لكل صيغة).
+        QuestPDF.Settings.License = LicenseType.Community;
+        services.AddSingleton<IReportWriter, ExcelReportWriter>();
+        services.AddSingleton<IReportWriter, PdfReportWriter>();
+        services.AddSingleton<IReportEngine, ReportEngine>();
 
         return services;
     }

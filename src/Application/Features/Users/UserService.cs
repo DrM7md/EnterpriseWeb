@@ -1,4 +1,5 @@
 using Application.Common.Abstractions;
+using Application.Common.Reporting;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Shared.Pagination;
@@ -13,6 +14,9 @@ public interface IUserService
     Task<Result<long>> CreateAsync(CreateUserRequest request, CancellationToken ct = default);
     Task<Result> UpdateAsync(long id, UpdateUserRequest request, CancellationToken ct = default);
     Task<Result> DeleteAsync(long id, CancellationToken ct = default);
+
+    /// <summary>يبني تقريرًا جدوليًا للمستخدمين ضمن نطاق المستخدم (للتصدير).</summary>
+    Task<TabularReport> BuildExportAsync(string? search, CancellationToken ct = default);
 }
 
 /// <summary>
@@ -144,6 +148,37 @@ internal sealed class UserService(
         db.Users.Remove(user); // يُحوَّل إلى حذف ناعم عبر الـ interceptor.
         await db.SaveChangesAsync(ct);
         return Result.Success();
+    }
+
+    public async Task<TabularReport> BuildExportAsync(string? search, CancellationToken ct = default)
+    {
+        // db.Users معزول تلقائيًا — التصدير لا يتجاوز نطاق المستخدم أبدًا.
+        var query = db.Users.AsNoTracking();
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var term = search.Trim();
+            query = query.Where(u => u.FullName.Contains(term) || u.Email.Contains(term) || u.UserName.Contains(term));
+        }
+
+        var rows = await query
+            .OrderBy(u => u.FullName)
+            .Select(u => new[]
+            {
+                u.FullName,
+                u.Email,
+                u.UserName,
+                u.OwnerUnit!.Name,
+                u.IsActive ? "مُفعّل" : "معطّل",
+                u.CreatedAtUtc.ToString("yyyy-MM-dd"),
+            })
+            .ToListAsync(ct);
+
+        return new TabularReport(
+            Title: "تقرير المستخدمين",
+            Columns: ["الاسم", "البريد", "اسم المستخدم", "الوحدة", "الحالة", "أُنشئ"],
+            Rows: rows.Select(r => (IReadOnlyList<string>)r).ToList(),
+            GeneratedBy: currentUser.UserName,
+            GeneratedAtUtc: DateTimeOffset.UtcNow);
     }
 
     private async Task<Result<List<long>>> ResolveRolesAsync(IReadOnlyList<long>? roleIds, CancellationToken ct)

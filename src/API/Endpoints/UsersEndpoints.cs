@@ -1,6 +1,7 @@
 using API.Common;
 using API.Security;
 using Application.Common.Modules;
+using Application.Common.Reporting;
 using Application.Common.Security;
 using Application.Features.Users;
 using Shared.Pagination;
@@ -36,6 +37,18 @@ public static class UsersEndpoints
             .RequirePermission(Permissions.Users.Read)
             .WithName("ListUsers")
             .WithSummary("قائمة المستخدمين (مُرقّمة/مُفلترة، معزولة حسب النطاق).");
+
+        // تصدير المستخدمين (Excel/PDF) — معزول حسب النطاق، بصلاحية مستقلّة.
+        group.MapGet("/export", async (string? format, string? search, IUserService service, IReportEngine engine, CancellationToken ct) =>
+            {
+                var report = await service.BuildExportAsync(search, ct);
+                var fmt = string.Equals(format, "pdf", StringComparison.OrdinalIgnoreCase) ? ReportFormat.Pdf : ReportFormat.Excel;
+                var file = engine.Generate(report, fmt);
+                return Results.File(file.Content, file.ContentType, file.FileName);
+            })
+            .RequirePermission(Permissions.Users.Export)
+            .WithName("ExportUsers")
+            .WithSummary("تصدير المستخدمين إلى Excel أو PDF (ضمن النطاق).");
 
         group.MapGet("/{id:long}", async (long id, IUserService service, CancellationToken ct) =>
                 (await service.GetByIdAsync(id, ct)).ToHttpResult())

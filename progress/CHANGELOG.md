@@ -1,5 +1,19 @@
 # 📝 CHANGELOG
 
+## 2026-06-27 — محرّك التقارير (ReportEngine) — نقطة قوة .NET
+**ماذا:** primitive توليد تقارير (Excel + PDF) بنمط Strategy، مُستهلَك في تصدير المستخدمين.
+**لماذا:** فجوة وظيفية مطلوبة؛ وأي موديول يحتاج تصديرًا الآن يستهلك المحرّك بلا تكرار.
+
+- **Application:** `Common/Reporting` — `TabularReport` (نموذج جدولي محايد للصيغة) + `IReportEngine` + `IReportWriter` (Strategy) + `ReportFormat`/`ReportFile`.
+- **Infrastructure:** `ExcelReportWriter` (ClosedXML، رأس مُنسّق + تجميد) · `PdfReportWriter` (QuestPDF، RTL + رأس/تذييل + ترقيم) · `ReportEngine` (توزيع حسب الصيغة) + ترخيص QuestPDF Community.
+- **Users:** `BuildExportAsync` يبني تقريرًا **معزولًا حسب النطاق** + endpoint `GET /users/export?format=xlsx|pdf` بصلاحية `users.export`.
+- **Frontend:** أزرار تصدير Excel/PDF في شريط أدوات المستخدمين (تنزيل blob).
+- اختبارات: +3 (بايتات صالحة: PK لـ xlsx · %PDF لـ pdf · صيغة غير مدعومة) → **34 إجمالًا**.
+
+**التحقّق:** build 0 تحذير · 34/34 اختبار · e2e: xlsx (أكّده `file` = "Microsoft Excel 2007+") · pdf (%PDF، 47KB) · content-type/disposition صحيحان · 401 بلا رمز.
+**لاحقًا:** التقارير الثقيلة → Hangfire background job (الآن متزامن للصغيرة).
+
+
 ## 2026-06-27 — Phase 5 (بدء): موديول الأدوار (Roles) — إثبات القالب
 **ماذا:** موديول ثانٍ كامل (backend + frontend) مبنيٌّ بقالب `brain/10`.
 **لماذا:** إثبات «نصف الوقت» — **بلا migration ولا أي تغيير بنية تحتية**، فقط كود ميزة.

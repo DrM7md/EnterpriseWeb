@@ -22,4 +22,23 @@ export const usersService = {
   async remove(id: number): Promise<void> {
     await apiClient.delete(`/users/${id}`);
   },
+  async export(format: 'xlsx' | 'pdf', search?: string): Promise<void> {
+    const response = await apiClient.get('/users/export', {
+      params: { format, search },
+      responseType: 'blob',
+    });
+    const disposition = response.headers['content-disposition'] as string | undefined;
+    const fileName = /filename="?([^"]+)"?/.exec(disposition ?? '')?.[1] ?? `users.${format}`;
+    triggerDownload(response.data as Blob, fileName);
+  },
 };
+
+/** ينزّل blob كملف عبر رابط مؤقّت. */
+function triggerDownload(blob: Blob, fileName: string) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = fileName;
+  a.click();
+  URL.revokeObjectURL(url);
+}

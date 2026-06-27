@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { DataTable, type Column } from '../../components/DataTable';
 import { useAuthStore } from '../../store/authStore';
 import { useDeleteUser, useUsers } from './users.hooks';
+import { usersService } from './users.service';
 import { UserDrawer } from './UserDrawer';
 import type { UserListItem } from './users.types';
 
@@ -58,6 +59,12 @@ export function UsersPage() {
           value={search}
           onChange={(e) => { setSearch(e.target.value); setPage(1); }}
         />
+        {can('users.export') && (
+          <div className="toolbar-actions">
+            <button className="btn-ghost" onClick={() => usersService.export('xlsx', search || undefined)}>تصدير Excel</button>
+            <button className="btn-ghost" onClick={() => usersService.export('pdf', search || undefined)}>تصدير PDF</button>
+          </div>
+        )}
       </div>
 
       <DataTable
