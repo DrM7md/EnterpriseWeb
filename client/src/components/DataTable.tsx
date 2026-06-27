@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export interface Column<T> {
   key: string;
@@ -35,6 +36,7 @@ export function DataTable<T>({
   onSort,
   rowActions,
 }: DataTableProps<T>) {
+  const { t } = useTranslation();
   return (
     <div className="table-wrap">
       <table className="data-table">
@@ -50,18 +52,18 @@ export function DataTable<T>({
                 {sortBy === col.key && <span className="sort-ind">{sortDescending ? ' ↓' : ' ↑'}</span>}
               </th>
             ))}
-            {rowActions && <th className="actions-col">إجراءات</th>}
+            {rowActions && <th className="actions-col">{t('common.actions')}</th>}
           </tr>
         </thead>
         <tbody>
           {isLoading && (
-            <tr><td colSpan={columns.length + 1} className="table-state">⏳ جارٍ التحميل…</td></tr>
+            <tr><td colSpan={columns.length + 1} className="table-state">{t('common.loading')}</td></tr>
           )}
           {isError && !isLoading && (
-            <tr><td colSpan={columns.length + 1} className="table-state error">تعذّر تحميل البيانات.</td></tr>
+            <tr><td colSpan={columns.length + 1} className="table-state error">{t('common.loadError')}</td></tr>
           )}
           {!isLoading && !isError && rows.length === 0 && (
-            <tr><td colSpan={columns.length + 1} className="table-state">لا توجد سجلات.</td></tr>
+            <tr><td colSpan={columns.length + 1} className="table-state">{t('common.empty')}</td></tr>
           )}
           {!isLoading && !isError && rows.map((row) => (
             <tr key={rowKey(row)}>

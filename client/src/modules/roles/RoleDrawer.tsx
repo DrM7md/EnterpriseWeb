@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
-import { AxiosError } from 'axios';
+import { useTranslation } from 'react-i18next';
 import { Drawer } from '../../components/Drawer';
+import { translateApiError } from '../../lib/apiError';
 import { useCreateRole, usePermissionCatalog, useRole, useUpdateRole } from './roles.hooks';
 import type { PermissionItem, RoleListItem } from './roles.types';
 
@@ -14,6 +15,7 @@ export function RoleDrawer({
   editing: RoleListItem | null;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   const isSystem = editing?.isSystem ?? false;
   const { data: catalog } = usePermissionCatalog();
   const { data: detail } = useRole(open && editing ? editing.id : null);
@@ -52,25 +54,25 @@ export function RoleDrawer({
       else await create.mutateAsync(payload);
       onClose();
     } catch (err) {
-      setError(err instanceof AxiosError ? err.response?.data?.detail ?? 'فشل الحفظ.' : 'فشل الحفظ.');
+      setError(translateApiError(err));
     }
   };
 
   return (
-    <Drawer open={open} title={editing ? 'تعديل دور' : 'دور جديد'} onClose={onClose}>
+    <Drawer open={open} title={editing ? t('roles.editTitle') : t('roles.createTitle')} onClose={onClose}>
       <form className="form" onSubmit={onSubmit}>
-        {isSystem && <p className="muted">دور نظام — للعرض فقط.</p>}
+        {isSystem && <p className="muted">{t('roles.systemReadonly')}</p>}
         <label className="field">
-          <span>اسم الدور</span>
+          <span>{t('roles.field.name')}</span>
           <input value={name} onChange={(e) => setName(e.target.value)} disabled={isSystem} required />
         </label>
         <label className="field">
-          <span>الوصف</span>
+          <span>{t('roles.field.description')}</span>
           <input value={description} onChange={(e) => setDescription(e.target.value)} disabled={isSystem} />
         </label>
 
         <div className="perm-picker">
-          <span className="field-label">الصلاحيات ({selected.size})</span>
+          <span className="field-label">{t('roles.permissionsCount', { count: selected.size })}</span>
           {grouped.map(([moduleName, perms]) => (
             <fieldset key={moduleName} className="perm-group">
               <legend>{moduleName}</legend>
@@ -85,7 +87,7 @@ export function RoleDrawer({
         </div>
 
         {error && <p className="form-error">{error}</p>}
-        {!isSystem && <button type="submit" className="btn-primary">{editing ? 'حفظ' : 'إنشاء'}</button>}
+        {!isSystem && <button type="submit" className="btn-primary">{editing ? t('common.save') : t('common.create')}</button>}
       </form>
     </Drawer>
   );

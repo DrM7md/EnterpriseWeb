@@ -146,3 +146,7 @@ body {
 .toolbar-actions { display: flex; gap: 8px; }
 .btn-ghost { background: var(--panel); border: 1px solid var(--border); color: var(--text); border-radius: 8px; padding: 8px 14px; cursor: pointer; font-family: inherit; font-size: 13px; }
 .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ===== i18n: topbar actions ===== */
+.topbar-actions { display: flex; align-items: center; gap: 12px; }
+.btn-ghost.sm { padding: 5px 12px; font-size: 12px; }

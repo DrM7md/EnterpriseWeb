@@ -4,6 +4,11 @@
 - **آخر تحديث:** 2026-06-27
 - **التغطية:** Phase 0 ✅ · 1 ✅ · 2 (primitives) 🟡 (DataTable/Drawer/Form + **ReportEngine**) · 3 (Users) ✅ · 4 (Module Registry) ✅ · 5 🟡 (Roles)
 
+## i18n (AR/EN + RTL) — مُنجَز
+- react-i18next + موارد ar/en (78 مفتاحًا متطابقًا) + تبديل لغة/اتجاه فوري + حفظ التفضيل.
+- **ترجمة أخطاء الخادم عبر رمزها** (الخادم يُرجع رمز i18n) — تصميم نظيف end-to-end.
+- كل الشاشات مُترجَمة (Login/Users/Roles/التنقّل/الجداول/النماذج).
+
 ## محرّك التقارير (ReportEngine) — مُنجَز
 - primitive `IReportEngine` (Strategy) بصيغتي **Excel (ClosedXML)** و**PDF (QuestPDF، RTL)**.
 - مُستهلَك في **تصدير المستخدمين** (`GET /users/export`) معزولًا حسب النطاق، بصلاحية `users.export`.

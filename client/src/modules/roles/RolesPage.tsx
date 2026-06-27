@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { DataTable, type Column } from '../../components/DataTable';
 import { useAuthStore } from '../../store/authStore';
 import { useDeleteRole, useRoles } from './roles.hooks';
@@ -8,6 +9,7 @@ import type { RoleListItem } from './roles.types';
 const PAGE_SIZE = 10;
 
 export function RolesPage() {
+  const { t, i18n } = useTranslation();
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -19,29 +21,29 @@ export function RolesPage() {
 
   const openCreate = () => { setEditing(null); setDrawerOpen(true); };
   const openEdit = (r: RoleListItem) => { setEditing(r); setDrawerOpen(true); };
-  const onDelete = (r: RoleListItem) => { if (confirm(`حذف الدور «${r.name}»؟`)) del.mutate(r.id); };
+  const onDelete = (r: RoleListItem) => { if (confirm(t('roles.confirmDelete', { name: r.name }))) del.mutate(r.id); };
 
   const columns: Column<RoleListItem>[] = [
-    { key: 'name', header: 'الدور', sortable: true, render: (r) => (
-        <span>{r.name}{r.isSystem && <span className="badge sys"> نظام</span>}</span>
+    { key: 'name', header: t('roles.col.role'), sortable: true, render: (r) => (
+        <span>{r.name}{r.isSystem && <span className="badge sys"> {t('common.system')}</span>}</span>
       ) },
-    { key: 'description', header: 'الوصف', render: (r) => r.description || '—' },
-    { key: 'permissionCount', header: 'الصلاحيات', render: (r) => r.permissionCount },
-    { key: 'createdAtUtc', header: 'أُنشئ', sortable: true, render: (r) => new Date(r.createdAtUtc).toLocaleDateString('ar') },
+    { key: 'description', header: t('roles.col.description'), render: (r) => r.description || '—' },
+    { key: 'permissionCount', header: t('roles.col.permissions'), render: (r) => r.permissionCount },
+    { key: 'createdAtUtc', header: t('roles.col.created'), sortable: true, render: (r) => new Date(r.createdAtUtc).toLocaleDateString(i18n.language) },
   ];
 
   return (
     <section className="page">
       <header className="page-head">
         <div>
-          <h1>الأدوار والصلاحيات</h1>
-          <p className="muted">{data ? `${data.totalCount} دور` : '…'}{isFetching && ' · تحديث'}</p>
+          <h1>{t('roles.title')}</h1>
+          <p className="muted">{data ? t('roles.count', { count: data.totalCount }) : '…'}{isFetching && ` · ${t('common.refreshing')}`}</p>
         </div>
-        {can('roles.create') && <button className="btn-primary" onClick={openCreate}>+ دور جديد</button>}
+        {can('roles.create') && <button className="btn-primary" onClick={openCreate}>{t('roles.new')}</button>}
       </header>
 
       <div className="toolbar">
-        <input className="search" placeholder="بحث باسم الدور…" value={search}
+        <input className="search" placeholder={t('roles.searchPlaceholder')} value={search}
           onChange={(e) => { setSearch(e.target.value); setPage(1); }} />
       </div>
 
@@ -53,17 +55,17 @@ export function RolesPage() {
         isError={isError}
         rowActions={(r) => (
           <div className="row-actions">
-            {can('roles.update') && <button className="link" onClick={() => openEdit(r)}>{r.isSystem ? 'عرض' : 'تعديل'}</button>}
-            {can('roles.delete') && !r.isSystem && <button className="link danger" onClick={() => onDelete(r)}>حذف</button>}
+            {can('roles.update') && <button className="link" onClick={() => openEdit(r)}>{r.isSystem ? t('common.view') : t('common.edit')}</button>}
+            {can('roles.delete') && !r.isSystem && <button className="link danger" onClick={() => onDelete(r)}>{t('common.delete')}</button>}
           </div>
         )}
       />
 
       {data && data.totalPages > 1 && (
         <footer className="pager">
-          <button disabled={!data.hasPrevious} onClick={() => setPage((p) => p - 1)}>السابق</button>
-          <span>صفحة {data.page} من {data.totalPages}</span>
-          <button disabled={!data.hasNext} onClick={() => setPage((p) => p + 1)}>التالي</button>
+          <button disabled={!data.hasPrevious} onClick={() => setPage((p) => p - 1)}>{t('common.previous')}</button>
+          <span>{t('common.pageOf', { page: data.page, total: data.totalPages })}</span>
+          <button disabled={!data.hasNext} onClick={() => setPage((p) => p + 1)}>{t('common.next')}</button>
         </footer>
       )}
 

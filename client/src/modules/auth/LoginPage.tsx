@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
 import { authService } from './auth.service';
 
 export function LoginPage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const setSession = useAuthStore((s) => s.setSession);
   const [email, setEmail] = useState('admin@ministry.gov');
@@ -22,28 +24,28 @@ export function LoginPage() {
       navigate('/users', { replace: true });
     } catch (err) {
       setError(err instanceof AxiosError && err.response?.status === 401
-        ? 'بيانات الدخول غير صحيحة.'
-        : 'تعذّر الاتصال بالخادم.');
+        ? t('errors.auth.invalid_credentials')
+        : t('auth.connectError'));
     } finally {
       setBusy(false);
     }
   };
 
   return (
-    <main className="auth-shell" dir="rtl">
+    <main className="auth-shell">
       <form className="auth-card" onSubmit={onSubmit}>
-        <span className="badge">Enterprise Web System</span>
-        <h1>تسجيل الدخول</h1>
+        <span className="badge">{t('appName')}</span>
+        <h1>{t('auth.title')}</h1>
         <label className="field">
-          <span>البريد الإلكتروني</span>
+          <span>{t('auth.email')}</span>
           <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
         </label>
         <label className="field">
-          <span>كلمة المرور</span>
+          <span>{t('auth.password')}</span>
           <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
         </label>
         {error && <p className="form-error">{error}</p>}
-        <button type="submit" className="btn-primary" disabled={busy}>{busy ? '…' : 'دخول'}</button>
+        <button type="submit" className="btn-primary" disabled={busy}>{busy ? '…' : t('auth.submit')}</button>
       </form>
     </main>
   );

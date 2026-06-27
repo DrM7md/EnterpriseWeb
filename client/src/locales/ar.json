@@ -1,0 +1,100 @@
+{
+  "appName": "نظام المؤسسة",
+  "common": {
+    "save": "حفظ",
+    "create": "إنشاء",
+    "edit": "تعديل",
+    "view": "عرض",
+    "delete": "حذف",
+    "search": "بحث",
+    "retry": "إعادة المحاولة",
+    "loading": "جارٍ التحميل…",
+    "empty": "لا توجد سجلات.",
+    "loadError": "تعذّر تحميل البيانات.",
+    "saveError": "فشل الحفظ.",
+    "next": "التالي",
+    "previous": "السابق",
+    "pageOf": "صفحة {{page}} من {{total}}",
+    "logout": "خروج",
+    "active": "مُفعّل",
+    "inactive": "معطّل",
+    "system": "نظام",
+    "refreshing": "تحديث",
+    "close": "إغلاق",
+    "actions": "إجراءات",
+    "language": "English"
+  },
+  "nav": {
+    "users": "المستخدمون",
+    "roles": "الأدوار"
+  },
+  "auth": {
+    "title": "تسجيل الدخول",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "submit": "دخول",
+    "connectError": "تعذّر الاتصال بالخادم."
+  },
+  "users": {
+    "title": "المستخدمون",
+    "count": "{{count}} مستخدم ضمن نطاقك",
+    "new": "+ مستخدم جديد",
+    "searchPlaceholder": "بحث بالاسم أو البريد…",
+    "exportExcel": "تصدير Excel",
+    "exportPdf": "تصدير PDF",
+    "confirmDelete": "حذف المستخدم «{{name}}»؟",
+    "createTitle": "مستخدم جديد",
+    "editTitle": "تعديل مستخدم",
+    "col": {
+      "name": "الاسم",
+      "email": "البريد",
+      "unit": "الوحدة",
+      "roles": "الأدوار",
+      "status": "الحالة",
+      "created": "أُنشئ"
+    },
+    "field": {
+      "userName": "اسم المستخدم",
+      "email": "البريد الإلكتروني",
+      "fullName": "الاسم الكامل",
+      "password": "كلمة المرور",
+      "active": "حساب مُفعّل"
+    }
+  },
+  "roles": {
+    "title": "الأدوار والصلاحيات",
+    "count": "{{count}} دور",
+    "new": "+ دور جديد",
+    "searchPlaceholder": "بحث باسم الدور…",
+    "confirmDelete": "حذف الدور «{{name}}»؟",
+    "createTitle": "دور جديد",
+    "editTitle": "تعديل دور",
+    "systemReadonly": "دور نظام — للعرض فقط.",
+    "permissionsCount": "الصلاحيات ({{count}})",
+    "col": {
+      "role": "الدور",
+      "description": "الوصف",
+      "permissions": "الصلاحيات",
+      "created": "أُنشئ"
+    },
+    "field": {
+      "name": "اسم الدور",
+      "description": "الوصف"
+    }
+  },
+  "errors": {
+    "auth.invalid_credentials": "بيانات الدخول غير صحيحة.",
+    "auth.user_inactive": "الحساب غير مُفعّل.",
+    "auth.invalid_refresh_token": "انتهت الجلسة، سجّل الدخول مجددًا.",
+    "user.not_found": "المستخدم غير موجود أو خارج نطاقك.",
+    "user.email_taken": "البريد الإلكتروني مستخدَم سلفًا.",
+    "user.unit_out_of_scope": "الوحدة المحدّدة خارج نطاقك.",
+    "user.cannot_delete_self": "لا يمكنك حذف حسابك.",
+    "role.not_found": "الدور غير موجود.",
+    "role.name_taken": "اسم الدور مستخدَم سلفًا.",
+    "role.system_locked": "لا يمكن تعديل أو حذف دور النظام.",
+    "module.disabled": "هذا الموديول غير مُفعّل لوحدتك.",
+    "module.core_locked": "لا يمكن تعطيل موديول أساسي.",
+    "internal_error": "حدث خطأ غير متوقّع."
+  }
+}

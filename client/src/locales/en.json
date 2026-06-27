@@ -1,0 +1,100 @@
+{
+  "appName": "Enterprise System",
+  "common": {
+    "save": "Save",
+    "create": "Create",
+    "edit": "Edit",
+    "view": "View",
+    "delete": "Delete",
+    "search": "Search",
+    "retry": "Retry",
+    "loading": "Loading…",
+    "empty": "No records.",
+    "loadError": "Failed to load data.",
+    "saveError": "Save failed.",
+    "next": "Next",
+    "previous": "Previous",
+    "pageOf": "Page {{page}} of {{total}}",
+    "logout": "Sign out",
+    "active": "Active",
+    "inactive": "Inactive",
+    "system": "system",
+    "refreshing": "refreshing",
+    "close": "Close",
+    "actions": "Actions",
+    "language": "العربية"
+  },
+  "nav": {
+    "users": "Users",
+    "roles": "Roles"
+  },
+  "auth": {
+    "title": "Sign in",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Sign in",
+    "connectError": "Cannot reach the server."
+  },
+  "users": {
+    "title": "Users",
+    "count": "{{count}} users in your scope",
+    "new": "+ New user",
+    "searchPlaceholder": "Search by name or email…",
+    "exportExcel": "Export Excel",
+    "exportPdf": "Export PDF",
+    "confirmDelete": "Delete user \"{{name}}\"?",
+    "createTitle": "New user",
+    "editTitle": "Edit user",
+    "col": {
+      "name": "Name",
+      "email": "Email",
+      "unit": "Unit",
+      "roles": "Roles",
+      "status": "Status",
+      "created": "Created"
+    },
+    "field": {
+      "userName": "Username",
+      "email": "Email",
+      "fullName": "Full name",
+      "password": "Password",
+      "active": "Account active"
+    }
+  },
+  "roles": {
+    "title": "Roles & Permissions",
+    "count": "{{count}} roles",
+    "new": "+ New role",
+    "searchPlaceholder": "Search by role name…",
+    "confirmDelete": "Delete role \"{{name}}\"?",
+    "createTitle": "New role",
+    "editTitle": "Edit role",
+    "systemReadonly": "System role — read-only.",
+    "permissionsCount": "Permissions ({{count}})",
+    "col": {
+      "role": "Role",
+      "description": "Description",
+      "permissions": "Permissions",
+      "created": "Created"
+    },
+    "field": {
+      "name": "Role name",
+      "description": "Description"
+    }
+  },
+  "errors": {
+    "auth.invalid_credentials": "Invalid credentials.",
+    "auth.user_inactive": "Account is inactive.",
+    "auth.invalid_refresh_token": "Session expired, please sign in again.",
+    "user.not_found": "User not found or out of scope.",
+    "user.email_taken": "Email is already in use.",
+    "user.unit_out_of_scope": "Selected unit is out of your scope.",
+    "user.cannot_delete_self": "You cannot delete your own account.",
+    "role.not_found": "Role not found.",
+    "role.name_taken": "Role name already in use.",
+    "role.system_locked": "System roles cannot be modified or deleted.",
+    "module.disabled": "This module is not enabled for your unit.",
+    "module.core_locked": "A core module cannot be disabled.",
+    "internal_error": "An unexpected error occurred."
+  }
+}
