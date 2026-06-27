@@ -96,18 +96,20 @@ try
 
     // --- تحديد المعدّل: حدّ عام لكل IP + سياسة صارمة لمسارات المصادقة (منع التخمين) ---
     const string AuthRateLimitPolicy = "auth";
+    var globalPermit = builder.Configuration.GetValue<int?>("RateLimit:GlobalPermitPerMinute") ?? 200;
+    var authPermit = builder.Configuration.GetValue<int?>("RateLimit:AuthPermitPerMinute") ?? 10;
     builder.Services.AddRateLimiter(options =>
     {
         options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
         options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
             RateLimitPartition.GetFixedWindowLimiter(
                 partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
-                factory: _ => new FixedWindowRateLimiterOptions { PermitLimit = 200, Window = TimeSpan.FromMinutes(1) }));
+                factory: _ => new FixedWindowRateLimiterOptions { PermitLimit = globalPermit, Window = TimeSpan.FromMinutes(1) }));
 
         options.AddPolicy(AuthRateLimitPolicy, httpContext =>
             RateLimitPartition.GetFixedWindowLimiter(
                 partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
-                factory: _ => new FixedWindowRateLimiterOptions { PermitLimit = 10, Window = TimeSpan.FromMinutes(1) }));
+                factory: _ => new FixedWindowRateLimiterOptions { PermitLimit = authPermit, Window = TimeSpan.FromMinutes(1) }));
 
         options.OnRejected = async (context, ct) =>
         {

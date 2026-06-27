@@ -40,8 +40,9 @@
 
 ## الأداء (SLOs)
 - ✅ Response Compression (Brotli) · Lazy/Projection · منع N+1.
-- 🟡 قياس latency أوّلي (بسيط p95 ~3ms / مُركّب ~7ms على LocalDB، حِمل خفيف).
-- ⬜ **Load test حقيقي** لإثبات الـ SLOs تحت تزامن + Output/Response Caching مع invalidation.
+- ✅ **Load test تحت تزامن** (50/100): ~900K طلب · 0 أخطاء · p95 مُركّب ~10–20ms (هامش 20× عن SLO 400ms) — LocalDB/جهاز تطوير. التفاصيل: `brain/11`.
+- ✅ حدود معدّل قابلة للضبط (`RateLimit:*`).
+- ⬜ **Output/Response Caching** مع invalidation للقراءات القابلة للتخزين · إعادة القياس على Azure SQL إنتاجي.
 
 ## الواجهة (Frontend)
 - ✅ React + TS strict · TanStack Query · Zustand · RHF + Zod · Router + حارس مصادقة.
