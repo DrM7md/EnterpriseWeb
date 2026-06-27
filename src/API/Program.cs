@@ -160,6 +160,7 @@ try
     v1.MapOrgUnitsEndpoints();
     v1.MapModulesEndpoints();
     v1.MapReportsEndpoints();
+    v1.MapUploadsEndpoints();
 
     app.Run();
 }

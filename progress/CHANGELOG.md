@@ -1,5 +1,16 @@
 # 📝 CHANGELOG
 
+## 2026-06-27 — Command Palette + Virtualization + Chunked Upload
+**ماذا:** ثلاث ميزات نضج دفعةً واحدة.
+
+- **Command Palette (⌘K):** عبر `cmdk` — تنقّل (الموديولات + الإعدادات) + إجراءات (سمة/لغة/خروج) مع بحث وتنقّل بلوحة المفاتيح. زر ⌘K في الشريط العلوي + اختصار عام. مُركّب في `AppShell`.
+- **Virtualization (TanStack Virtual):** primitive `VirtualList` يُصيّر المرئي فقط — مُطبَّق على **شجرة الوحدات** (غير مُرقّمة، قد تكبر). الجداول تبقى مُرقّمة بالتصميم.
+- **Chunked Upload:** `IChunkedUploadService` (Infrastructure) + endpoints `/uploads/init` · `/{id}/chunks/{i}` · `/{id}/complete` (تجميع + تنظيف). أداة frontend `chunkedUpload` (دفعات 1MB + تقدّم) + قسم تجربة في الإعدادات.
+- ترجمات AR/EN (parity 138/138).
+
+**التحقّق:** build 0 تحذير · 44/44 اختبار · e2e رفع: 3 دفعات → ملف مُجمَّع صحيح (`AAAA-BBBB-CCCC!`) + تنظيف الأجزاء + 400 لجزء ناقص + 401 بلا مصادقة.
+
+
 ## 2026-06-27 — Caching على مستوى التطبيق + invalidation + عدّادات OTel
 **ماذا:** تخزين مؤقت آمن للقراءات العامّة مع إبطال واضح.
 **لماذا:** آخر بند أداء في الوثيقة (Caching مع invalidation واضح) — بأمان دون تجاوز التصريح.

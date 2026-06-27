@@ -1,11 +1,12 @@
 import { useTranslation } from 'react-i18next';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { Building2, Languages, LogOut, Moon, Settings, ShieldCheck, Sun, Users, type LucideIcon } from 'lucide-react';
+import { Building2, Command, Languages, LogOut, Moon, Settings, ShieldCheck, Sun, Users, type LucideIcon } from 'lucide-react';
 import { authService } from '../modules/auth/auth.service';
 import { useModules } from '../modules/modules/modules.api';
 import { useAuthStore } from '../store/authStore';
 import { usePreferencesStore } from '../store/preferencesStore';
 import { Button } from '../components/ui/Button';
+import { CommandPalette } from '../components/CommandPalette';
 import { cn } from '../lib/cn';
 
 /** خريطة مفاتيح الموديولات إلى عناصر التنقّل (التسمية تُترجَم + أيقونة). */
@@ -69,6 +70,13 @@ export function AppShell() {
             {user?.fullName} · {user?.roles.join('، ')}
           </span>
           <div className="flex items-center gap-2">
+            <button
+              onClick={() => globalThis.dispatchEvent(new CustomEvent('cmdk:open'))}
+              className="flex items-center gap-2 rounded-lg border border-border bg-bg px-3 py-1.5 text-[0.8125rem] text-muted transition-colors hover:border-accent hover:text-fg max-md:hidden"
+            >
+              <Command size={14} /> {t('palette.open')}
+              <kbd className="rounded border border-border px-1.5 text-[0.6875rem]">⌘K</kbd>
+            </button>
             <Button variant="ghost" size="icon-sm" onClick={toggleTheme} aria-label={t('common.toggleTheme')} title={t('common.toggleTheme')}>
               {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
             </Button>
@@ -82,6 +90,7 @@ export function AppShell() {
         </header>
         <main className="min-w-0 flex-1 p-7 max-md:p-4"><Outlet /></main>
       </div>
+      <CommandPalette />
     </div>
   );
 }

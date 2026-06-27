@@ -32,6 +32,14 @@
     "orgUnits": "Org Units",
     "settings": "Settings"
   },
+  "palette": {
+    "title": "Command palette",
+    "open": "Search & commands",
+    "placeholder": "Type a command or search…",
+    "empty": "No results.",
+    "navigate": "Navigate",
+    "actions": "Actions"
+  },
   "orgUnits": {
     "title": "Organizational Units",
     "subtitle": "Ministry structure — each unit owns its records (isolation basis).",
@@ -113,7 +121,11 @@
     "sections": {
       "appearance": {
         "title": "Interface settings",
-        "desc": "Theme (light/dark) and how forms open."
+        "desc": "Theme, font, size, and how forms open."
+      },
+      "uploads": {
+        "title": "File uploads",
+        "desc": "Try chunked upload of large files."
       },
       "dropdowns": {
         "title": "Dropdown settings",
@@ -152,6 +164,12 @@
         "drawer": "Side drawer",
         "modal": "Modal dialog"
       }
+    },
+    "uploads": {
+      "pick": "Choose a file",
+      "uploading": "Uploading…",
+      "done": "Uploaded \"{{name}}\" ({{size}} KB)",
+      "failed": "Upload failed."
     }
   },
   "errors": {

@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { AppearanceSettings } from './sections/AppearanceSettings';
 import { NotificationsSettings } from './sections/NotificationsSettings';
 import { DropdownsSettings } from './sections/DropdownsSettings';
+import { UploadsSettings } from './sections/UploadsSettings';
 
 /**
  * سجلّ أقسام الإعدادات — مصدر واحد للحقيقة.
@@ -19,6 +20,7 @@ export interface SettingsSectionMeta {
 
 export const SETTINGS_SECTIONS: SettingsSectionMeta[] = [
   { key: 'appearance', icon: '🎨', element: <AppearanceSettings /> },
+  { key: 'uploads', icon: '📤', element: <UploadsSettings /> },
   { key: 'dropdowns', icon: '📑', element: <DropdownsSettings /> },
   { key: 'notifications', icon: '🔔', element: <NotificationsSettings /> },
 ];

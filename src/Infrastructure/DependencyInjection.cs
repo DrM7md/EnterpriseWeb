@@ -56,6 +56,7 @@ public static class DependencyInjection
 
         // التقارير غير المتزامنة (Hangfire jobs) + تخزين الملفات.
         services.AddSingleton<IFileStorage, LocalFileStorage>();
+        services.AddScoped<IChunkedUploadService, ChunkedUploadService>();
         services.AddScoped<IReportService, ReportService>();
         services.AddScoped<IReportJobRunner, ReportJobRunner>();
 
