@@ -1,8 +1,14 @@
 # 📍 STATUS — الحالة الحالية
 
-- **المرحلة الحالية:** Phase 4 (Template + Module Registry) ✅ **مكتملة**.
+- **المرحلة الحالية:** Phase 5 (توسعة الموديولات) جارية — موديول **Roles** مُنجَز بالقالب.
 - **آخر تحديث:** 2026-06-27
-- **التغطية:** Phase 0 ✅ · Phase 1 ✅ · Phase 2 (primitives) جزئيًّا via-slice · Phase 3 (slice Users) ✅ · Phase 4 ✅
+- **التغطية:** Phase 0 ✅ · 1 ✅ · 2 (primitives) جزئيًّا · 3 (Users) ✅ · 4 (Module Registry) ✅ · 5 🟡 (Roles مُنجَز)
+
+## Phase 5 — إثبات القالب (Roles)
+- موديول **الأدوار والصلاحيات** كامل (backend + frontend) مبنيٌّ بقالب `brain/10`.
+- **الدليل على «نصف الوقت»:** بلا migration، بلا تغيير Infrastructure — فقط كود ميزة فوق كيانات Phase 1.
+- يشمل: CRUD + ربط صلاحيات (منتقي مجمَّع حسب الموديول) + حماية أدوار النظام + كتالوج الصلاحيات.
+- يُكمل دورة RBAC: الآن يمكن تعريف الأدوار وربطها بالصلاحيات عبر الواجهة.
 
 ## Phase 4 — ما أُنجِز
 - **Module Registry + Feature Flags لكل قسم (حيّ):** `Modules`/`ModuleSettings` + `IModuleRegistry` + `/modules` (effective/toggle) + بوابة `RequireModule` على endpoints.

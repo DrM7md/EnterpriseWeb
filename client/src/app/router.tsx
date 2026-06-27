@@ -1,6 +1,7 @@
 import { Navigate, createBrowserRouter } from 'react-router-dom';
 import { AppShell } from '../layouts/AppShell';
 import { LoginPage } from '../modules/auth/LoginPage';
+import { RolesPage } from '../modules/roles/RolesPage';
 import { UsersPage } from '../modules/users/UsersPage';
 import { useAuthStore } from '../store/authStore';
 
@@ -18,6 +19,7 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <Navigate to="/users" replace /> },
       { path: 'users', element: <UsersPage /> },
+      { path: 'roles', element: <RolesPage /> },
     ],
   },
   { path: '*', element: <Navigate to="/" replace /> },

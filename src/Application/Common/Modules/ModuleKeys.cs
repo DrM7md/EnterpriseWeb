@@ -10,6 +10,7 @@ public static class ModuleKeys
     public const string OrgUnits = "org-units";
     public const string Audit = "audit";
     public const string Users = "users";
+    public const string Roles = "roles";
 
     public sealed record ModuleDefinition(string Key, string Name, string Description, bool IsCore);
 
@@ -19,5 +20,6 @@ public static class ModuleKeys
         new(OrgUnits, "الوحدات التنظيمية", "التسلسل الهرمي والعزل", IsCore: true),
         new(Audit, "سجل التدقيق", "تتبّع كل كتابة حسّاسة", IsCore: true),
         new(Users, "إدارة المستخدمين", "إنشاء وتعديل حسابات القسم", IsCore: false),
+        new(Roles, "الأدوار والصلاحيات", "تعريف الأدوار وربطها بالصلاحيات", IsCore: true),
     ];
 }

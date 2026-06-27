@@ -133,3 +133,10 @@ body {
 .auth-shell { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
 .auth-card { width: 360px; background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 32px; display: flex; flex-direction: column; gap: 16px; }
 .auth-card h1 { font-size: 22px; margin: 4px 0 8px; }
+
+/* ===== Permission picker (Roles) ===== */
+.field-label { color: var(--muted); font-size: 13px; display: block; margin-bottom: 8px; }
+.perm-picker { display: flex; flex-direction: column; gap: 12px; }
+.perm-group { border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+.perm-group legend { color: var(--accent); font-size: 12px; padding: 0 6px; }
+.badge.sys { background: #2a2640; color: #a5b4fc; font-size: 11px; margin-inline-start: 6px; }

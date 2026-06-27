@@ -6,6 +6,7 @@ import { useAuthStore } from '../store/authStore';
 /** خريطة مفاتيح الموديولات إلى عناصر التنقّل. */
 const NAV: Record<string, { to: string; label: string }> = {
   users: { to: '/users', label: 'المستخدمون' },
+  roles: { to: '/roles', label: 'الأدوار' },
 };
 
 /** الهيكل الرئيسي: شريط جانبي + رأس + منطقة المحتوى. */

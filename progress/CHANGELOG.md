@@ -1,5 +1,19 @@
 # 📝 CHANGELOG
 
+## 2026-06-27 — Phase 5 (بدء): موديول الأدوار (Roles) — إثبات القالب
+**ماذا:** موديول ثانٍ كامل (backend + frontend) مبنيٌّ بقالب `brain/10`.
+**لماذا:** إثبات «نصف الوقت» — **بلا migration ولا أي تغيير بنية تحتية**، فقط كود ميزة.
+
+- **Application:** `Features/Roles` (DTOs + Errors + Validators + `IRoleService`): List/Get/Create/Update/Delete + كتالوج الصلاحيات. أدوار النظام محميّة (system_locked).
+- **API:** `RolesEndpoints` بصلاحيات `roles.*` + بوابة `RequireModule(roles)` + `/roles/permissions`.
+- **Module:** `ModuleKeys.Roles` (core) — يُبذَّر تلقائيًا.
+- **Frontend:** موديول `roles` (types/schema/service/hooks) + `RolesPage` + `RoleDrawer` بمنتقي صلاحيات مجمَّع حسب الموديول + عنصر تنقّل.
+- اختبارات: +3 (Role validators) → **31 إجمالًا**.
+
+**التحقّق:** build 0 تحذير · 31/31 اختبار · e2e: كتالوج 17 صلاحية · CRUD + ربط صلاحيات · 409 dup/system-locked · roles module=core/enabled.
+**ملاحظة القالب:** لا migration، لا تعديل Infrastructure — أُعيد استخدام كيانات Phase 1 (`Role`/`Permission`/`RolePermission`).
+
+
 ## 2026-06-27 — Phase 4: Module Registry + Feature Flags + استخراج الـ Template
 **ماذا:** جعل النظام configurable لكل قسم + تحويل slice Users إلى قالب متكرّر.
 **لماذا:** كل قسم يُخصَّص بلا إعادة كتابة، وكل موديول جديد يُبنى بنصف الوقت.

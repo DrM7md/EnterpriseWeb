@@ -10,6 +10,7 @@
 | audit | سجل التدقيق (كتابة تلقائية) | ✅ مُنفّذ (Phase 1) — واجهة عرض لاحقًا | core |
 | primitives | DataTable/Drawer/Form (نواة) | 🟡 جزئي — بُنيت أثناء slice الـ Users | — |
 | **users** | إدارة المستخدمين (الـ slice الأول، المرجع/Template) | ✅ مُنفّذ end-to-end | per-department |
+| **roles** | الأدوار والصلاحيات (موديول ثانٍ بالقالب) | ✅ مُنفّذ end-to-end | core |
 
 ## قواعد التسجيل
 - موديولات **core** لا تُطفأ (أساس النظام).
