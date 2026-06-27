@@ -1,10 +1,12 @@
 using Application.Common.Abstractions;
 using Application.Common.Reporting;
 using Application.Common.Security;
+using Application.Features.Reports;
 using Infrastructure.Identity;
 using Infrastructure.Persistence;
 using Infrastructure.Persistence.Interceptors;
 using Infrastructure.Reporting;
+using Infrastructure.Storage;
 using Infrastructure.System;
 using Infrastructure.Time;
 using Microsoft.EntityFrameworkCore;
@@ -48,6 +50,11 @@ public static class DependencyInjection
         services.AddSingleton<IReportWriter, ExcelReportWriter>();
         services.AddSingleton<IReportWriter, PdfReportWriter>();
         services.AddSingleton<IReportEngine, ReportEngine>();
+
+        // التقارير غير المتزامنة (Hangfire jobs) + تخزين الملفات.
+        services.AddSingleton<IFileStorage, LocalFileStorage>();
+        services.AddScoped<IReportService, ReportService>();
+        services.AddScoped<IReportJobRunner, ReportJobRunner>();
 
         return services;
     }

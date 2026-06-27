@@ -9,7 +9,7 @@
 | org-units | الوحدات التنظيمية + RLS | ✅ أساس مُنفّذ (Phase 1) — CRUD في Phase 3+ | core |
 | audit | سجل التدقيق (كتابة تلقائية) | ✅ مُنفّذ (Phase 1) — واجهة عرض لاحقًا | core |
 | primitives | DataTable/Drawer/Form (نواة) | 🟡 جزئي — بُنيت أثناء slice الـ Users | — |
-| reporting | محرّك التقارير (Excel/PDF، Strategy) | ✅ مُنفّذ — مُستهلَك في تصدير المستخدمين | — |
+| reporting | محرّك التقارير (Excel/PDF، Strategy) + تقارير غير متزامنة (Hangfire + IFileStorage) | ✅ مُنفّذ — تصدير متزامن وغير متزامن للمستخدمين | — |
 | **users** | إدارة المستخدمين (الـ slice الأول، المرجع/Template) | ✅ مُنفّذ end-to-end | per-department |
 | **roles** | الأدوار والصلاحيات (موديول ثانٍ بالقالب) | ✅ مُنفّذ end-to-end | core |
 

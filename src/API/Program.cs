@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.IdentityModel.Tokens;
+using Hangfire;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateBootstrapLogger();
@@ -32,6 +33,15 @@ try
     // --- Composition root ---
     builder.Services.AddApplication();
     builder.Services.AddInfrastructure(builder.Configuration);
+
+    // --- Background jobs (Hangfire) لتوليد التقارير الثقيلة خارج الـ request ---
+    var hangfireConn = builder.Configuration.GetConnectionString("Default")!;
+    builder.Services.AddHangfire(cfg => cfg
+        .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+        .UseSimpleAssemblyNameTypeSerializer()
+        .UseRecommendedSerializerSettings()
+        .UseSqlServerStorage(hangfireConn));
+    builder.Services.AddHangfireServer();
 
     builder.Services.AddOpenApi();
     builder.Services.AddProblemDetails();
@@ -140,6 +150,7 @@ try
     v1.MapUsersEndpoints();
     v1.MapRolesEndpoints();
     v1.MapModulesEndpoints();
+    v1.MapReportsEndpoints();
 
     app.Run();
 }

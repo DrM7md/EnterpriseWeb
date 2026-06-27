@@ -150,3 +150,6 @@ body {
 /* ===== i18n: topbar actions ===== */
 .topbar-actions { display: flex; align-items: center; gap: 12px; }
 .btn-ghost.sm { padding: 5px 12px; font-size: 12px; }
+
+/* ===== async export notice ===== */
+.notice { background: #1a1d25; border: 1px solid var(--accent); color: var(--text); border-radius: 8px; padding: 10px 14px; font-size: 13px; margin: 0 0 16px; }

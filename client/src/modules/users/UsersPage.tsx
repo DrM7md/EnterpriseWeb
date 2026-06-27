@@ -4,6 +4,7 @@ import { DataTable, type Column } from '../../components/DataTable';
 import { useAuthStore } from '../../store/authStore';
 import { useDeleteUser, useUsers } from './users.hooks';
 import { usersService } from './users.service';
+import { runAsyncUsersExport } from '../reports/reports.service';
 import { UserDrawer } from './UserDrawer';
 import type { UserListItem } from './users.types';
 
@@ -17,6 +18,14 @@ export function UsersPage() {
   const [sortDescending, setSortDescending] = useState(true);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [editing, setEditing] = useState<UserListItem | null>(null);
+  const [asyncMsg, setAsyncMsg] = useState<string | null>(null);
+
+  const onAsyncExport = () =>
+    runAsyncUsersExport('xlsx', search || undefined, (state) => {
+      if (state === 'queued') setAsyncMsg(t('users.exportQueued'));
+      else if (state === 'failed') setAsyncMsg(t('users.exportFailed'));
+      else setAsyncMsg(null);
+    });
 
   const can = useAuthStore((s) => s.hasPermission);
   const { data, isLoading, isError, isFetching } = useUsers({ page, pageSize: PAGE_SIZE, search: search || undefined, sortBy, sortDescending });
@@ -61,9 +70,12 @@ export function UsersPage() {
           <div className="toolbar-actions">
             <button className="btn-ghost" onClick={() => usersService.export('xlsx', search || undefined)}>{t('users.exportExcel')}</button>
             <button className="btn-ghost" onClick={() => usersService.export('pdf', search || undefined)}>{t('users.exportPdf')}</button>
+            <button className="btn-ghost" onClick={onAsyncExport}>{t('users.exportAsync')}</button>
           </div>
         )}
       </div>
+
+      {asyncMsg && <p className="notice">{asyncMsg}</p>}
 
       <DataTable
         columns={columns}

@@ -3,6 +3,7 @@ using API.Security;
 using Application.Common.Modules;
 using Application.Common.Reporting;
 using Application.Common.Security;
+using Application.Features.Reports;
 using Application.Features.Users;
 using Shared.Pagination;
 
@@ -48,7 +49,18 @@ public static class UsersEndpoints
             })
             .RequirePermission(Permissions.Users.Export)
             .WithName("ExportUsers")
-            .WithSummary("تصدير المستخدمين إلى Excel أو PDF (ضمن النطاق).");
+            .WithSummary("تصدير المستخدمين إلى Excel أو PDF (متزامن، للصغيرة).");
+
+        // تصدير غير متزامن (للتقارير الكبيرة) — يجدول job ويُعيد 202 + معرّف الطلب.
+        group.MapPost("/export/async", async (string? format, string? search, IReportService reports, CancellationToken ct) =>
+            {
+                var fmt = string.Equals(format, "pdf", StringComparison.OrdinalIgnoreCase) ? ReportFormat.Pdf : ReportFormat.Excel;
+                var id = await reports.EnqueueUsersExportAsync(fmt, search, ct);
+                return Results.Accepted($"/api/v1/reports/{id}", new { id });
+            })
+            .RequirePermission(Permissions.Users.Export)
+            .WithName("ExportUsersAsync")
+            .WithSummary("جدولة تصدير المستخدمين بالخلفية (Hangfire) ثم التنزيل عند الجاهزية.");
 
         group.MapGet("/{id:long}", async (long id, IUserService service, CancellationToken ct) =>
                 (await service.GetByIdAsync(id, ct)).ToHttpResult())

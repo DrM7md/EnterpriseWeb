@@ -25,6 +25,7 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options, ICurren
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
     public DbSet<Module> Modules => Set<Module>();
     public DbSet<ModuleSetting> ModuleSettings => Set<ModuleSetting>();
+    public DbSet<ReportRequest> ReportRequests => Set<ReportRequest>();
 
     /// <summary>نطاق العزل الحالي — يُقرأ داخل Global Query Filter (يُعاد تقييمه لكل استعلام).</summary>
     public IReadOnlyCollection<long> CurrentUnitScope => currentUser.UnitScope;
@@ -38,6 +39,7 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options, ICurren
         modelBuilder.Entity<OrgUnit>().HasQueryFilter(o => !o.IsDeleted);
         modelBuilder.Entity<Role>().HasQueryFilter(r => !r.IsDeleted);
         modelBuilder.Entity<ModuleSetting>().HasQueryFilter(m => !m.IsDeleted && CurrentUnitScope.Contains(m.OwnerUnitId));
+        modelBuilder.Entity<ReportRequest>().HasQueryFilter(r => !r.IsDeleted && CurrentUnitScope.Contains(r.OwnerUnitId));
 
         base.OnModelCreating(modelBuilder);
     }

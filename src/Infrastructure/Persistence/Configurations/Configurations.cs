@@ -130,6 +130,24 @@ public sealed class ModuleSettingConfiguration : IEntityTypeConfiguration<Module
     }
 }
 
+public sealed class ReportRequestConfiguration : IEntityTypeConfiguration<ReportRequest>
+{
+    public void Configure(EntityTypeBuilder<ReportRequest> b)
+    {
+        b.ToTable("ReportRequests");
+        b.HasKey(x => x.Id);
+        b.Property(x => x.Type).HasMaxLength(50).IsRequired();
+        b.Property(x => x.Format).HasMaxLength(20).IsRequired();
+        b.Property(x => x.Status).HasConversion<string>().HasMaxLength(20);
+        b.Property(x => x.FileKey).HasMaxLength(200);
+        b.Property(x => x.FileName).HasMaxLength(200);
+        b.Property(x => x.ContentType).HasMaxLength(120);
+        b.Property(x => x.Error).HasMaxLength(2000);
+        b.HasIndex(x => new { x.OwnerUnitId, x.Status });
+        b.Property(x => x.RowVersion).IsRowVersion();
+    }
+}
+
 public sealed class AuditLogConfiguration : IEntityTypeConfiguration<AuditLog>
 {
     public void Configure(EntityTypeBuilder<AuditLog> b)

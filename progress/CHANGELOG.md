@@ -1,5 +1,19 @@
 # 📝 CHANGELOG
 
+## 2026-06-27 — تقارير غير متزامنة (Hangfire) + IFileStorage — إغلاق متطلّب Phase 6
+**ماذا:** توليد التقارير الثقيلة كـ background job بدل داخل الـ request.
+**لماذا:** «لا تُولّد PDF/Excel ضخمًا داخل الـ request» (متطلّب صريح).
+
+- **`IFileStorage`** (تجريد) + `LocalFileStorage` (تطوير) — Azure Blob لاحقًا لنفس الواجهة.
+- **`ReportRequest`** entity (معزول، يحمل نطاق صاحبه وقت الطلب) + migration `AddReportRequests`.
+- **Hangfire (SqlServer)** + `ReportService` (enqueue/status/download) + `ReportJobRunner` (يعمل بنطاق صريح بلا سياق HTTP).
+- إعادة هيكلة `UserService`: `BuildExportForScopeAsync` (نطاق صريح) يشارك المنطق مع التصدير المتزامن.
+- **API:** `POST /users/export/async` (202+id) · `GET /reports` · `GET /reports/{id}` · `GET /reports/{id}/download` — كلها معزولة.
+- **Frontend:** زر «تصدير ضخم (بالخلفية)» يجدول، يستطلع، ثم ينزّل تلقائيًا + إشعار (i18n).
+
+**التحقّق:** build 0 تحذير · 35/35 اختبار · e2e: enqueue 202 → poll Processing→Completed(rows=3) → download (Excel صالح، `file`=Microsoft Excel 2007+) · قائمة التقارير ✅.
+
+
 ## 2026-06-27 — Phase 6 (جزئي): التصليب للإنتاج
 **ماذا:** حزمة تصليب أمني/أدائي قابلة للتحقّق عبر HTTP + قياس latency.
 **لماذا:** «Measure, don't guess» — رفع النظام نحو جاهزية الإنتاج بأدلّة.

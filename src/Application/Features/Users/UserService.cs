@@ -15,8 +15,11 @@ public interface IUserService
     Task<Result> UpdateAsync(long id, UpdateUserRequest request, CancellationToken ct = default);
     Task<Result> DeleteAsync(long id, CancellationToken ct = default);
 
-    /// <summary>يبني تقريرًا جدوليًا للمستخدمين ضمن نطاق المستخدم (للتصدير).</summary>
+    /// <summary>يبني تقريرًا جدوليًا للمستخدمين ضمن نطاق المستخدم الحالي (تصدير متزامن).</summary>
     Task<TabularReport> BuildExportAsync(string? search, CancellationToken ct = default);
+
+    /// <summary>يبني التقرير بنطاق عزل صريح — للـ background jobs بلا سياق HTTP.</summary>
+    Task<TabularReport> BuildExportForScopeAsync(IReadOnlyCollection<long> unitScope, string? search, string? requestedBy, CancellationToken ct = default);
 }
 
 /// <summary>
@@ -150,10 +153,18 @@ internal sealed class UserService(
         return Result.Success();
     }
 
-    public async Task<TabularReport> BuildExportAsync(string? search, CancellationToken ct = default)
+    public Task<TabularReport> BuildExportAsync(string? search, CancellationToken ct = default)
+        // db.Users معزول تلقائيًا — التصدير المتزامن لا يتجاوز نطاق المستخدم.
+        => BuildReportAsync(db.Users.AsNoTracking(), search, currentUser.UserName, ct);
+
+    public Task<TabularReport> BuildExportForScopeAsync(IReadOnlyCollection<long> unitScope, string? search, string? requestedBy, CancellationToken ct = default)
+        // الـ job بلا سياق HTTP: نطبّق العزل صراحةً بالنطاق المحفوظ وقت الطلب.
+        => BuildReportAsync(
+            db.Users.AsNoTracking().IgnoreQueryFilters().Where(u => !u.IsDeleted && unitScope.Contains(u.OwnerUnitId)),
+            search, requestedBy, ct);
+
+    private static async Task<TabularReport> BuildReportAsync(IQueryable<User> query, string? search, string? requestedBy, CancellationToken ct)
     {
-        // db.Users معزول تلقائيًا — التصدير لا يتجاوز نطاق المستخدم أبدًا.
-        var query = db.Users.AsNoTracking();
         if (!string.IsNullOrWhiteSpace(search))
         {
             var term = search.Trim();
@@ -177,7 +188,7 @@ internal sealed class UserService(
             Title: "تقرير المستخدمين",
             Columns: ["الاسم", "البريد", "اسم المستخدم", "الوحدة", "الحالة", "أُنشئ"],
             Rows: rows.Select(r => (IReadOnlyList<string>)r).ToList(),
-            GeneratedBy: currentUser.UserName,
+            GeneratedBy: requestedBy,
             GeneratedAtUtc: DateTimeOffset.UtcNow);
     }
 

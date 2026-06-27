@@ -21,8 +21,16 @@
 
 > **صدق:** هذه أرقام حِمل خفيف على عميل واحد و LocalDB — تُثبت أن النمط (AsNoTracking + DTO projection + RLS) لا يحمل تكلفة باهظة، لكنها **ليست load test**. إثبات الـ SLOs تحت تزامن حقيقي (k6/NBomber + SQL Server إنتاجي) يبقى ضمن Phase 6 المتبقّي.
 
+## التقارير غير المتزامنة (Hangfire) — ✅ مُنفّذ
+- **Hangfire (SqlServer storage)** + `IFileStorage` (محلي للتطوير، Azure Blob للإنتاج لاحقًا).
+- تدفّق: `POST /users/export/async` → ينشئ `ReportRequest` (Pending) + **يخزّن نطاق صاحبه** → 202 + id
+  → Hangfire job (`ReportJobRunner`) يولّد بالخلفية بنطاق صريح (بلا سياق HTTP) → يخزّن الملف → Completed.
+- المتابعة: `GET /reports` (تقاريري) · `GET /reports/{id}` (polling) · `GET /reports/{id}/download` (الملف).
+- **معزول حسب النطاق** على كل الخطوات. الفشل يُسجَّل (Status=Failed + Error) ويُعاد المحاولة عبر Hangfire.
+- مُتحقَّق e2e: enqueue 202 → poll Processing→Completed(rows=3) → download (Excel صالح، أكّده `file`).
+- **إشعار عند الجاهزية:** حاليًا polling؛ إشعار لحظي (SignalR) لاحقًا.
+
 ## المتبقّي في Phase 6
-- **Hangfire** — نقل توليد التقارير الثقيلة إلى background job (الآن متزامن للصغيرة) + إشعار عند الجاهزية + تخزين الملف عبر `IFileStorage`.
 - **Output/Response Caching** مع invalidation للقراءات القابلة للتخزين.
 - **Load test** فعلي لإثبات الـ SLOs تحت حِمل + لوحات OpenTelemetry.
 - **Idempotency-Keys** على الكتابات الحرجة.

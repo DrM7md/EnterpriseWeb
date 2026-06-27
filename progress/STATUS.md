@@ -4,11 +4,12 @@
 - **آخر تحديث:** 2026-06-27
 - **التغطية:** Phase 0 ✅ · 1 ✅ · 2 (primitives) 🟡 (DataTable/Drawer/Form + **ReportEngine**) · 3 (Users) ✅ · 4 (Module Registry) ✅ · 5 🟡 (Roles)
 
-## التصليب للإنتاج (Phase 6 — جزئي) — مُنجَز
-- **Rate Limiting** (عام 200/د + auth 10/د) · **Brotli compression** · **Security headers** · **caching لبوابة الموديول** (+إبطال).
-- مُتحقَّق عبر HTTP: 429+Retry-After · `Content-Encoding: br` · 4 رؤوس أمان.
+## التصليب للإنتاج (Phase 6 — شبه مكتمل) — مُنجَز
+- **Rate Limiting** (عام 200/د + auth 10/د) · **Brotli compression** · **Security headers** · **caching لبوابة الموديول**.
+- **تقارير غير متزامنة (Hangfire + IFileStorage):** `POST /users/export/async` → job بالخلفية → `/reports/{id}` polling → download. معزول حسب النطاق.
+- مُتحقَّق عبر HTTP: 429+Retry-After · `Content-Encoding: br` · 4 رؤوس أمان · enqueue→Completed→download (ملف صالح).
 - **latency** (حِمل خفيف، LocalDB): بسيط p95 ~3ms · مُركّب ~7ms — ضمن SLOs، لكن **ليس load test**.
-- المتبقّي: Hangfire (تقارير ثقيلة) · Output Caching · load test حقيقي. التفاصيل: `brain/11`.
+- المتبقّي: Output Caching · load test حقيقي · OpenTelemetry · Idempotency. التفاصيل: `brain/11`.
 
 ## i18n (AR/EN + RTL) — مُنجَز
 - react-i18next + موارد ar/en (78 مفتاحًا متطابقًا) + تبديل لغة/اتجاه فوري + حفظ التفضيل.

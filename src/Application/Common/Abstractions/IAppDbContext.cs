@@ -19,6 +19,7 @@ public interface IAppDbContext
     DbSet<AuditLog> AuditLogs { get; }
     DbSet<Module> Modules { get; }
     DbSet<ModuleSetting> ModuleSettings { get; }
+    DbSet<ReportRequest> ReportRequests { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }
