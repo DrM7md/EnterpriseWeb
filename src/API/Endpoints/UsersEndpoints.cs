@@ -1,5 +1,6 @@
 using API.Common;
 using API.Security;
+using Application.Common.Modules;
 using Application.Common.Security;
 using Application.Features.Users;
 using Shared.Pagination;
@@ -14,7 +15,9 @@ public static class UsersEndpoints
 {
     public static IEndpointRouteBuilder MapUsersEndpoints(this IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("/users").WithTags("Users").RequireAuthorization();
+        var group = app.MapGroup("/users").WithTags("Users")
+            .RequireAuthorization()
+            .RequireModule(ModuleKeys.Users); // بوابة: موديول users يجب أن يكون مُفعّلًا لوحدة المستخدم
 
         group.MapGet("/", async (
                 int? page, int? pageSize, string? search, string? sortBy, bool? sortDescending,

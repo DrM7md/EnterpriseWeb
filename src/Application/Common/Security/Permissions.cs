@@ -37,6 +37,12 @@ public static class Permissions
         public const string Export = "audit.export";
     }
 
+    public static class Modules
+    {
+        public const string Read = "modules.read";
+        public const string Manage = "modules.manage";
+    }
+
     /// <summary>كل الصلاحيات المعروفة (تُستخدم للبذر والتحقّق).</summary>
     public static IReadOnlyList<(string Code, string Module)> All { get; } =
     [
@@ -44,5 +50,6 @@ public static class Permissions
         (Roles.Read, "roles"), (Roles.Create, "roles"), (Roles.Update, "roles"), (Roles.Delete, "roles"),
         (OrgUnits.Read, "org-units"), (OrgUnits.Create, "org-units"), (OrgUnits.Update, "org-units"), (OrgUnits.Delete, "org-units"),
         (Audit.Read, "audit"), (Audit.Export, "audit"),
+        (Modules.Read, "modules"), (Modules.Manage, "modules"),
     ];
 }

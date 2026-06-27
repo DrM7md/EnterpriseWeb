@@ -1,4 +1,5 @@
 using Application.Common.Abstractions;
+using Application.Common.Modules;
 using Application.Common.Security;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -86,6 +87,22 @@ public static class DbSeeder
             db.UserRoles.Add(new UserRole { UserId = admin.Id, RoleId = superAdmin.Id });
             await db.SaveChangesAsync(ct);
             logger.LogWarning("Seeded default admin {Email} — غيّر كلمة المرور فورًا في الإنتاج", DefaultAdminEmail);
+        }
+
+        // 5) سجل الموديولات (مزامنة الكتالوج).
+        var existingModuleKeys = await db.Modules.Select(m => m.Key).ToListAsync(ct);
+        foreach (var def in ModuleKeys.All.Where(d => !existingModuleKeys.Contains(d.Key)))
+            db.Modules.Add(new Module { Key = def.Key, Name = def.Name, Description = def.Description, IsCore = def.IsCore });
+        await db.SaveChangesAsync(ct);
+
+        // 6) تفعيل موديول users لوحدة الجذر (غير core ⇒ opt-in؛ نفعّله للجذر افتراضيًا).
+        var usersModule = await db.Modules.FirstAsync(m => m.Key == ModuleKeys.Users, ct);
+        var hasSetting = await db.ModuleSettings.IgnoreQueryFilters()
+            .AnyAsync(s => s.ModuleId == usersModule.Id && s.OwnerUnitId == rootUnit.Id, ct);
+        if (!hasSetting)
+        {
+            db.ModuleSettings.Add(new ModuleSetting { ModuleId = usersModule.Id, OwnerUnitId = rootUnit.Id, IsEnabled = true });
+            await db.SaveChangesAsync(ct);
         }
     }
 }

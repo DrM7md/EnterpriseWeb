@@ -1,8 +1,14 @@
 # 📍 STATUS — الحالة الحالية
 
-- **المرحلة الحالية:** Vertical Slice الأول (Users) ✅ **مكتمل end-to-end** — يثبت المعمارية بكود حقيقي.
+- **المرحلة الحالية:** Phase 4 (Template + Module Registry) ✅ **مكتملة**.
 - **آخر تحديث:** 2026-06-27
-- **التغطية:** Phase 0 ✅ · Phase 1 ✅ · Phase 2 (primitives) جزئيًّا via-slice · Phase 3 (الـ slice الأول) ✅
+- **التغطية:** Phase 0 ✅ · Phase 1 ✅ · Phase 2 (primitives) جزئيًّا via-slice · Phase 3 (slice Users) ✅ · Phase 4 ✅
+
+## Phase 4 — ما أُنجِز
+- **Module Registry + Feature Flags لكل قسم (حيّ):** `Modules`/`ModuleSettings` + `IModuleRegistry` + `/modules` (effective/toggle) + بوابة `RequireModule` على endpoints.
+- **القاعدة:** core دائمًا مُفعّل؛ غير core opt-in لكل قسم. الواجهة تبني التنقّل من المُفعّل فقط.
+- **القالب:** `brain/10-module-template.md` (نمط الموديول backend+frontend) + قواعد كود مُستخلَصة في `brain/08`.
+- **e2e مُثبَت:** toggle users → 200↔403 · تعطيل core (audit) → 409.
 
 ## ما أُنجِز (Slice: إدارة المستخدمين)
 ### Backend
@@ -26,10 +32,10 @@
 | `npm run lint` | نجاح (تحذير HMR وحيد) |
 | CORS للـ SPA (preflight + login) | 204 + 200 مع ACAO ✅ |
 
-## ⏭️ التالي
-**تقسيمان مقترحان (يتطلّبان قرارك):**
-1. **Phase 4 — استخراج Template + Module Registry:** تعميم نمط Users (Backend + Frontend) + Feature Flags لكل قسم.
-2. **تصليب الـ Primitives (Phase 2 كامل):** shadcn/ui + Tailwind tokens · DataGrid (TanStack virtualization) · Command Palette · ReportEngine (QuestPDF) · i18n (AR/EN + RTL switching).
+## ⏭️ التالي (يتطلّب قرارك)
+1. **Phase 5 — توسعة الموديولات:** بناء موديول ثانٍ بالقالب (مثل Roles/Org-Units) لإثبات «نصف الوقت».
+2. **تصليب الـ Primitives (Phase 2 كامل):** shadcn/ui + Tailwind tokens · DataGrid (TanStack virtualization) · Command Palette · ReportEngine (QuestPDF) · i18n (AR/EN + RTL).
+3. **Phase 6 — التصليب للإنتاج:** caching للبوابة، benchmarks، rate limiting، Hangfire، Testcontainers.
 
 ## فجوات معروفة (موثّقة بصدق)
 - الواجهة وظيفية لكن **بلا shadcn/Tailwind بعد** (CSS مباشر) — تصليب التصميم في Phase 2 الكامل.

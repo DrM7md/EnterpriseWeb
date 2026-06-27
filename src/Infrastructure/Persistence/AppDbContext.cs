@@ -2,6 +2,7 @@ using System.Reflection;
 using Application.Common.Abstractions;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Module = Domain.Entities.Module;
 
 namespace Infrastructure.Persistence;
 
@@ -22,6 +23,8 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options, ICurren
     public DbSet<UserRole> UserRoles => Set<UserRole>();
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
+    public DbSet<Module> Modules => Set<Module>();
+    public DbSet<ModuleSetting> ModuleSettings => Set<ModuleSetting>();
 
     /// <summary>نطاق العزل الحالي — يُقرأ داخل Global Query Filter (يُعاد تقييمه لكل استعلام).</summary>
     public IReadOnlyCollection<long> CurrentUnitScope => currentUser.UnitScope;
@@ -34,6 +37,7 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options, ICurren
         modelBuilder.Entity<User>().HasQueryFilter(u => !u.IsDeleted && CurrentUnitScope.Contains(u.OwnerUnitId));
         modelBuilder.Entity<OrgUnit>().HasQueryFilter(o => !o.IsDeleted);
         modelBuilder.Entity<Role>().HasQueryFilter(r => !r.IsDeleted);
+        modelBuilder.Entity<ModuleSetting>().HasQueryFilter(m => !m.IsDeleted && CurrentUnitScope.Contains(m.OwnerUnitId));
 
         base.OnModelCreating(modelBuilder);
     }

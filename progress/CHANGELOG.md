@@ -1,5 +1,20 @@
 # 📝 CHANGELOG
 
+## 2026-06-27 — Phase 4: Module Registry + Feature Flags + استخراج الـ Template
+**ماذا:** جعل النظام configurable لكل قسم + تحويل slice Users إلى قالب متكرّر.
+**لماذا:** كل قسم يُخصَّص بلا إعادة كتابة، وكل موديول جديد يُبنى بنصف الوقت.
+
+- **Domain:** `Module` + `ModuleSetting` (Feature Flag لكل وحدة + `ConfigJson` لحقول القسم).
+- **Application:** `IModuleRegistry` (GetEffective/IsEnabled/SetEnabled) + `ModuleKeys` (core vs opt-in) + `modules.*` صلاحيات.
+- **Infrastructure:** EF configs + فلتر عزل لـ `ModuleSetting` + migration `AddModuleRegistry` + بذر الموديولات وتفعيل users للجذر.
+- **API:** `/modules` (effective/toggle) + **`RequireModule` endpoint filter** (بوابة تفعيل) مطبّقة على Users.
+- **Frontend:** `useModules` + بناء تنقّل `AppShell` من الموديولات المُفعّلة فقط.
+- **التوثيق:** `brain/10-module-template.md` (القالب) + استخلاص قواعد كود حقيقية إلى `brain/08`.
+- اختبارات: +5 لـ `ModuleRegistry` (core-always-on / opt-in / core-locked) → **28 إجمالًا**.
+
+**التحقّق:** build 0 تحذير · 28/28 اختبار · e2e: toggle users → 200↔403 · تعطيل core → 409.
+
+
 ## 2026-06-27 — Vertical Slice الأول: إدارة المستخدمين (Users)
 **ماذا:** أول موديول end-to-end (backend + frontend) يثبت المعمارية بكود حقيقي.
 **لماذا:** الـ slice المُثبَت > المخطّط النظري؛ والـ primitives تُبنى وهي مُستهلَكة (ADR-0004).

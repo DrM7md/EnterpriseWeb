@@ -17,7 +17,8 @@
 - **Roles** / **Permissions** / **RolePermissions** / **UserRoles** — RBAC (`Permission.Code` unique).
 - **RefreshTokens** — `TokenHash` (مفهرس)، `ExpiresAtUtc`، `RevokedAtUtc`، `ReplacedByTokenHash`.
 - **AuditLogs** — (EntityName, EntityId, Action, ChangesJson, UserId, OwnerUnitId, CorrelationId, TimestampUtc). فهارس على (EntityName,EntityId) و TimestampUtc.
-- **Modules** / **FeatureFlags** — Module Registry لكل قسم (config في DB) — ⏳ Phase 4.
+- **Modules** — كتالوج الموديولات (`Key` unique، `IsCore`). ✅ Phase 4.
+- **ModuleSettings** — علم تفعيل لكل وحدة (`ModuleId`+`OwnerUnitId` unique، `IsEnabled`، `ConfigJson`). معزول بـ RLS. ✅ Phase 4.
 
 كل الكيانات القابلة للحذف تحمل `IsDeleted`/`DeletedAtUtc`/`DeletedBy` + `RowVersion` للتزامن.
 

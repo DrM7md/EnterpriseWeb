@@ -104,6 +104,32 @@ public sealed class RefreshTokenConfiguration : IEntityTypeConfiguration<Refresh
     }
 }
 
+public sealed class ModuleConfiguration : IEntityTypeConfiguration<Module>
+{
+    public void Configure(EntityTypeBuilder<Module> b)
+    {
+        b.ToTable("Modules");
+        b.HasKey(x => x.Id);
+        b.Property(x => x.Key).HasMaxLength(50).IsRequired();
+        b.Property(x => x.Name).HasMaxLength(200).IsRequired();
+        b.Property(x => x.Description).HasMaxLength(400);
+        b.HasIndex(x => x.Key).IsUnique();
+    }
+}
+
+public sealed class ModuleSettingConfiguration : IEntityTypeConfiguration<ModuleSetting>
+{
+    public void Configure(EntityTypeBuilder<ModuleSetting> b)
+    {
+        b.ToTable("ModuleSettings");
+        b.HasKey(x => x.Id);
+        b.HasIndex(x => new { x.ModuleId, x.OwnerUnitId }).IsUnique();
+        b.HasOne(x => x.Module).WithMany(m => m.Settings).HasForeignKey(x => x.ModuleId);
+        b.HasOne(x => x.OwnerUnit).WithMany().HasForeignKey(x => x.OwnerUnitId).OnDelete(DeleteBehavior.Restrict);
+        b.Property(x => x.RowVersion).IsRowVersion();
+    }
+}
+
 public sealed class AuditLogConfiguration : IEntityTypeConfiguration<AuditLog>
 {
     public void Configure(EntityTypeBuilder<AuditLog> b)

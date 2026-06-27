@@ -17,6 +17,8 @@ public interface IAppDbContext
     DbSet<UserRole> UserRoles { get; }
     DbSet<RefreshToken> RefreshTokens { get; }
     DbSet<AuditLog> AuditLogs { get; }
+    DbSet<Module> Modules { get; }
+    DbSet<ModuleSetting> ModuleSettings { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

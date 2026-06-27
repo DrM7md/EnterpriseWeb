@@ -1,6 +1,6 @@
 # 06 — سجل الموديولات (Module Registry)
 
-> كل موديول يُفعَّل/يُطفأ ويُضبَط **لكل قسم** عبر config في قاعدة البيانات (Phase 4). الحقول الخاصة بقسم → JSON column محكوم بـ schema validation (لا كل شيء ديناميكي).
+> ✅ **مُنفّذ (Phase 4).** كل موديول يُفعَّل/يُطفأ **لكل قسم** عبر `ModuleSettings` في قاعدة البيانات. الحقول الخاصة بقسم → `ConfigJson` (schema validation لاحقًا). الجداول: `Modules` (الكتالوج) + `ModuleSettings` (علم تفعيل لكل وحدة). الخدمة: `IModuleRegistry`. البوابة: `RequireModule` على الـ endpoints. القاعدة: **core دائمًا مُفعّل؛ غير core opt-in لكل قسم**.
 
 | Module | الوصف | الحالة | أعلام التفعيل |
 |---|---|---|---|

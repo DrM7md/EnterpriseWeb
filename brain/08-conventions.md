@@ -1,6 +1,17 @@
 # 08 — أعراف الكود (Conventions)
 
-> Phase 0: الأساس. تُستخلَص قواعد إضافية من **كود حقيقي** في Phase 4.
+> مُستخلَصة من كود حقيقي (Phase 4). للنمط الكامل خطوةً بخطوة: `brain/10-module-template.md`.
+
+## أنماط مُثبَتة (من slice Users)
+- **بنية الميزة:** `Features/{Name}/` يجمع DTOs + Errors + Validators + Service في مجلد واحد.
+- **الخدمة:** واجهة عامة `I{Name}Service` + تنفيذ `internal sealed` يُحقَن عبر امتداد DI للطبقة.
+- **الأخطاء:** ثابتة كـ `static readonly Error` (أو دوال) في `{Name}Errors` — رموز قابلة للترجمة `{module}.{reason}`.
+- **القراءة:** `AsNoTracking()` + `.Select(...)` projection مباشرة (لا N+1). الترتيب عبر whitelist لا سلسلة خام.
+- **الكتابة:** فحص النطاق صراحةً قبل الإضافة؛ التفرّد عبر `IgnoreQueryFilters` (عالمي)؛ الحذف عبر `Remove` (يتحوّل ناعمًا).
+- **endpoints:** minimal APIs مُجمَّعة في امتداد، query params اختيارية صريحة (لا `[AsParameters]`)، `RequirePermission` + `RequireModule` + `WithValidation`.
+- **العزل:** فلتر EF عام لكل `IOwnedByUnit`؛ النطاق من الـ JWT (لا استعلام داخل الفلتر — ADR-0003).
+- **التدقيق:** interceptor على مرحلتين (سجل الإنشاء بعد الحفظ ليُلتقَط المفتاح المُولَّد).
+
 
 ## C# / .NET
 - `Nullable` + `ImplicitUsings` مفعّلان · `TreatWarningsAsErrors=true` (في `Directory.Build.props`).

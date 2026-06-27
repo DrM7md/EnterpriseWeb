@@ -95,6 +95,7 @@ try
     v1.MapSystemEndpoints();
     v1.MapAuthEndpoints();
     v1.MapUsersEndpoints();
+    v1.MapModulesEndpoints();
 
     app.Run();
 }
