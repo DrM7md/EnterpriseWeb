@@ -8,7 +8,8 @@ public static class AuthEndpoints
 {
     public static IEndpointRouteBuilder MapAuthEndpoints(this IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("/auth").WithTags("Auth");
+        // سياسة معدّل صارمة على المصادقة (منع تخمين كلمات المرور).
+        var group = app.MapGroup("/auth").WithTags("Auth").RequireRateLimiting("auth");
 
         group.MapPost("/login", async (LoginRequest request, IAuthService auth, HttpContext http, CancellationToken ct) =>
                 (await auth.LoginAsync(request, Ip(http), ct)).ToHttpResult())

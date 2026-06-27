@@ -1,5 +1,19 @@
 # 📝 CHANGELOG
 
+## 2026-06-27 — Phase 6 (جزئي): التصليب للإنتاج
+**ماذا:** حزمة تصليب أمني/أدائي قابلة للتحقّق عبر HTTP + قياس latency.
+**لماذا:** «Measure, don't guess» — رفع النظام نحو جاهزية الإنتاج بأدلّة.
+
+- **Rate Limiting:** حدّ عام 200/دقيقة لكل IP + سياسة `auth` صارمة 10/دقيقة على login/refresh (منع تخمين) + `Retry-After`.
+- **Response Compression:** Brotli + Gzip لـ JSON.
+- **Security Headers:** nosniff · X-Frame-Options DENY · Referrer-Policy · Cross-Domain none (middleware).
+- **Module Gate Caching:** `IMemoryCache` لفحص البوابة (TTL 60s) + إبطال فوري عند التبديل (إصلاح أداء — كان استعلامًا لكل طلب).
+- توثيق `brain/11-performance-and-hardening.md` (التطبيق + قياسات + المتبقّي).
+
+**التحقّق:** build 0 تحذير · 35/35 اختبار (+1 إبطال كاش) · e2e: br ✅ · 4 رؤوس أمان ✅ · flood 10×200→4×429+Retry-After ✅ · latency p95: بسيط ~3ms / مُركّب ~7ms (حِمل خفيف، LocalDB — ليس load test).
+**المتبقّي:** Hangfire للتقارير الثقيلة · Output Caching · load test حقيقي · Idempotency-Keys.
+
+
 ## 2026-06-27 — i18n (AR/EN كامل + RTL switching)
 **ماذا:** ترجمة الواجهة بالكامل ودعم تبديل اللغة والاتجاه (متطلّب DoD لكل موديول).
 **لماذا:** الواجهة كانت عربية مثبّتة؛ النظام مؤسسي يتطلّب AR/EN كاملًا.

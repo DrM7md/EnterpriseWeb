@@ -1,4 +1,6 @@
+using System.IO.Compression;
 using System.Text;
+using System.Threading.RateLimiting;
 using System.IdentityModel.Tokens.Jwt;
 using API.Endpoints;
 using API.Middleware;
@@ -9,6 +11,8 @@ using Infrastructure;
 using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 
@@ -63,6 +67,42 @@ try
     builder.Services.AddHealthChecks()
         .AddDbContextCheck<AppDbContext>("database");
 
+    builder.Services.AddMemoryCache();
+
+    // --- ضغط الاستجابات (Brotli أولًا ثم Gzip) ---
+    builder.Services.AddResponseCompression(options =>
+    {
+        options.EnableForHttps = true;
+        options.Providers.Add<BrotliCompressionProvider>();
+        options.Providers.Add<GzipCompressionProvider>();
+        options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(["application/json"]);
+    });
+    builder.Services.Configure<BrotliCompressionProviderOptions>(o => o.Level = CompressionLevel.Fastest);
+    builder.Services.Configure<GzipCompressionProviderOptions>(o => o.Level = CompressionLevel.Fastest);
+
+    // --- تحديد المعدّل: حدّ عام لكل IP + سياسة صارمة لمسارات المصادقة (منع التخمين) ---
+    const string AuthRateLimitPolicy = "auth";
+    builder.Services.AddRateLimiter(options =>
+    {
+        options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+        options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+            RateLimitPartition.GetFixedWindowLimiter(
+                partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                factory: _ => new FixedWindowRateLimiterOptions { PermitLimit = 200, Window = TimeSpan.FromMinutes(1) }));
+
+        options.AddPolicy(AuthRateLimitPolicy, httpContext =>
+            RateLimitPartition.GetFixedWindowLimiter(
+                partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                factory: _ => new FixedWindowRateLimiterOptions { PermitLimit = 10, Window = TimeSpan.FromMinutes(1) }));
+
+        options.OnRejected = async (context, ct) =>
+        {
+            context.HttpContext.Response.Headers.RetryAfter = "60";
+            await context.HttpContext.Response.WriteAsJsonAsync(
+                new { title = "rate_limit_exceeded", status = 429, detail = "عدد كبير من الطلبات. حاول لاحقًا." }, ct);
+        };
+    });
+
     builder.Services.AddCors(options =>
         options.AddPolicy(SpaCorsPolicy, policy => policy
             .WithOrigins(builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? ["http://localhost:5173"])
@@ -77,12 +117,15 @@ try
         await DbSeeder.SeedAsync(app.Services);
     }
 
+    app.UseResponseCompression();
     app.UseExceptionHandler();
     app.UseSerilogRequestLogging();
     app.UseMiddleware<CorrelationIdMiddleware>();
+    app.UseMiddleware<SecurityHeadersMiddleware>();
 
     app.UseHttpsRedirection();
     app.UseCors(SpaCorsPolicy);
+    app.UseRateLimiter();
     app.UseAuthentication();
     app.UseAuthorization();
 

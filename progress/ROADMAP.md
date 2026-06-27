@@ -8,7 +8,7 @@
 | 3 | Vertical Slice الأولى ⭐ | ✅ مكتملة | موديول Users كامل end-to-end (backend + frontend) يثبت المعمارية |
 | 4 | استخراج Template + Module Registry | ✅ مكتملة | Module Registry + Feature Flags لكل قسم (حيّ) + قالب موديول موثّق (`brain/10`) |
 | 5 | توسعة الموديولات | 🟡 جارية | موديول Roles مُنجَز بالقالب (بلا migration/infra — أثبت «نصف الوقت») · المزيد عند الحاجة |
-| 6 | التصليب للإنتاج (Hardening) | ⬜ | benchmarks · caching · rate limiting · security review · load test · Hangfire |
+| 6 | التصليب للإنتاج (Hardening) | 🟡 جزئيًّا | ✅ rate limiting · compression (Brotli) · security headers · gate caching · latency sanity · المتبقّي: Hangfire · output caching · load test · OpenTelemetry |
 | 7 | التوثيق النهائي والتسليم | ⬜ | `brain/` كامل + Production Checklist |
 
 ## القاعدة

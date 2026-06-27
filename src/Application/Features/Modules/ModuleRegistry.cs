@@ -1,6 +1,7 @@
 using Application.Common.Abstractions;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Shared.Results;
 
 namespace Application.Features.Modules;
@@ -21,8 +22,11 @@ public interface IModuleRegistry
 /// سجل الموديولات + أعلام التفعيل لكل قسم. القاعدة: core دائمًا مُفعّل؛
 /// غير core مُعطّل افتراضيًا حتى يُفعَّل صراحةً لوحدة (opt-in لكل قسم).
 /// </summary>
-internal sealed class ModuleRegistry(IAppDbContext db) : IModuleRegistry
+internal sealed class ModuleRegistry(IAppDbContext db, IMemoryCache cache) : IModuleRegistry
 {
+    private static readonly TimeSpan GateTtl = TimeSpan.FromSeconds(60);
+    private static string GateKey(string moduleKey, long unitId) => $"module-enabled:{moduleKey}:{unitId}";
+
     public async Task<Result<IReadOnlyList<ModuleInfo>>> GetEffectiveAsync(long unitId, CancellationToken ct = default)
     {
         var modules = await db.Modules.AsNoTracking().ToListAsync(ct);
@@ -42,14 +46,22 @@ internal sealed class ModuleRegistry(IAppDbContext db) : IModuleRegistry
 
     public async Task<bool> IsEnabledAsync(string moduleKey, long unitId, CancellationToken ct = default)
     {
-        var module = await db.Modules.AsNoTracking().FirstOrDefaultAsync(m => m.Key == moduleKey, ct);
-        if (module is null)
-            return false;
-        if (module.IsCore)
-            return true;
+        // البوابة تُفحَص لكل طلب؛ نخزّنها مؤقتًا (TTL قصير) ونُبطلها عند التبديل.
+        if (cache.TryGetValue(GateKey(moduleKey, unitId), out bool cached))
+            return cached;
 
-        return await db.ModuleSettings.AsNoTracking().IgnoreQueryFilters()
-            .AnyAsync(s => s.ModuleId == module.Id && s.OwnerUnitId == unitId && s.IsEnabled && !s.IsDeleted, ct);
+        var module = await db.Modules.AsNoTracking().FirstOrDefaultAsync(m => m.Key == moduleKey, ct);
+        bool enabled;
+        if (module is null)
+            enabled = false;
+        else if (module.IsCore)
+            enabled = true;
+        else
+            enabled = await db.ModuleSettings.AsNoTracking().IgnoreQueryFilters()
+                .AnyAsync(s => s.ModuleId == module.Id && s.OwnerUnitId == unitId && s.IsEnabled && !s.IsDeleted, ct);
+
+        cache.Set(GateKey(moduleKey, unitId), enabled, GateTtl);
+        return enabled;
     }
 
     public async Task<Result> SetEnabledAsync(string moduleKey, long unitId, bool enabled, CancellationToken ct = default)
@@ -69,6 +81,7 @@ internal sealed class ModuleRegistry(IAppDbContext db) : IModuleRegistry
             setting.IsEnabled = enabled;
 
         await db.SaveChangesAsync(ct);
+        cache.Remove(GateKey(moduleKey, unitId)); // إبطال الكاش فورًا بعد التبديل.
         return Result.Success();
     }
 }

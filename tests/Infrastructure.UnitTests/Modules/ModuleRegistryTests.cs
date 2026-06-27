@@ -3,6 +3,7 @@ using Application.Features.Modules;
 using Domain.Entities;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Xunit;
 
 namespace Infrastructure.UnitTests.Modules;
@@ -27,6 +28,9 @@ public class ModuleRegistryTests
         new(new DbContextOptionsBuilder<AppDbContext>()
             .UseInMemoryDatabase(Guid.NewGuid().ToString()).Options, new FullScopeUser());
 
+    private static ModuleRegistry NewRegistry(AppDbContext db) =>
+        new(db, new MemoryCache(new MemoryCacheOptions()));
+
     private static async Task SeedAsync(AppDbContext db)
     {
         db.Modules.AddRange(
@@ -41,7 +45,7 @@ public class ModuleRegistryTests
         var db = NewDb();
         await SeedAsync(db);
 
-        Assert.True(await new ModuleRegistry(db).IsEnabledAsync("audit", unitId: 10));
+        Assert.True(await NewRegistry(db).IsEnabledAsync("audit", unitId: 10));
     }
 
     [Fact]
@@ -50,7 +54,7 @@ public class ModuleRegistryTests
         var db = NewDb();
         await SeedAsync(db);
 
-        Assert.False(await new ModuleRegistry(db).IsEnabledAsync("users", unitId: 10));
+        Assert.False(await NewRegistry(db).IsEnabledAsync("users", unitId: 10));
     }
 
     [Fact]
@@ -58,7 +62,7 @@ public class ModuleRegistryTests
     {
         var db = NewDb();
         await SeedAsync(db);
-        var registry = new ModuleRegistry(db);
+        var registry = NewRegistry(db);
 
         await registry.SetEnabledAsync("users", unitId: 10, enabled: true);
 
@@ -72,7 +76,7 @@ public class ModuleRegistryTests
         var db = NewDb();
         await SeedAsync(db);
 
-        var result = await new ModuleRegistry(db).SetEnabledAsync("audit", unitId: 10, enabled: false);
+        var result = await NewRegistry(db).SetEnabledAsync("audit", unitId: 10, enabled: false);
 
         Assert.True(result.IsFailure);
         Assert.Equal("module.core_locked", result.Error.Code);
@@ -83,12 +87,24 @@ public class ModuleRegistryTests
     {
         var db = NewDb();
         await SeedAsync(db);
-        var registry = new ModuleRegistry(db);
+        var registry = NewRegistry(db);
         await registry.SetEnabledAsync("users", unitId: 10, enabled: true);
 
         var effective = (await registry.GetEffectiveAsync(unitId: 10)).Value;
 
         Assert.True(effective.Single(m => m.Key == "audit").IsEnabled);
         Assert.True(effective.Single(m => m.Key == "users").IsEnabled);
+    }
+
+    [Fact]
+    public async Task Toggle_invalidates_cached_gate_result()
+    {
+        var db = NewDb();
+        await SeedAsync(db);
+        var registry = NewRegistry(db);
+
+        Assert.False(await registry.IsEnabledAsync("users", unitId: 10)); // يُخزَّن "معطّل"
+        await registry.SetEnabledAsync("users", unitId: 10, enabled: true); // يجب أن يُبطل الكاش
+        Assert.True(await registry.IsEnabledAsync("users", unitId: 10));   // يعكس القيمة الجديدة فورًا
     }
 }
