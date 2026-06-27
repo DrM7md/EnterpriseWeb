@@ -1,35 +1,39 @@
 # 📍 STATUS — الحالة الحالية
 
-- **المرحلة الحالية:** Phase 0 — التأسيس ✅ **مكتملة**
+- **المرحلة الحالية:** Phase 1 — العمود الفقري ✅ **مكتملة**
 - **آخر تحديث:** 2026-06-27
-- **نسبة الإنجاز الكلية:** Phase 0/7 منجزة
+- **نسبة الإنجاز الكلية:** Phase 0 + 1 من 7 منجزتان
 
-## ما أُنجِز في Phase 0
-- ✅ مستودع Git مستقلّ + `.gitignore` + أعراف.
-- ✅ هيكل Clean Architecture (Domain · Application · Infrastructure · API · Shared) — **يبني بلا تحذيرات**.
-- ✅ `Result<T>` + `Error` + خريطة أخطاء HTTP موحّدة.
-- ✅ slice إثبات end-to-end: `GET /api/v1/system/info` (Application interface → Infrastructure impl → API).
-- ✅ Health checks (`/health/live`, `/health/ready`) + OpenAPI + CORS + API versioning (`/api/v1`).
-- ✅ واجهة React (Vite + TS strict) + TanStack Query + axios، تستهلك الـ slice مع Loading/Error states — **تبني بنجاح**.
-- ✅ اختبارات (3 وحدات لـ `Result`) — **خضراء**.
-- ✅ Docker multi-stage (API + client) + `docker-compose` + GitHub Actions CI.
-- ✅ `brain/` (00–09) و`progress/` مُهيّآن.
+## ما أُنجِز في Phase 1 (Cross-Cutting)
+- ✅ **EF Core + SQL Server** (LocalDB محليًّا) + أول migration (`InitialCreate`) مُطبَّق.
+- ✅ **Auth: JWT + Refresh Token Rotation** مع **كشف إعادة الاستخدام** (إبطال السلسلة عند التسريب).
+- ✅ **RBAC + Permission-based Authorization** — سياسات ديناميكية `perm:{code}` لكل endpoint.
+- ✅ **Org Units + RLS** — Global Query Filter يُصفّي `IOwnedByUnit` حسب نطاق المستخدم (مُضمَّن في الرمز).
+- ✅ **Audit + Soft Delete** — interceptor يضبط حقول التدقيق، يحوّل الحذف لناعم، ويكتب `AuditLog`.
+- ✅ **Serilog (structured) + Correlation ID** middleware يمرّ عبر كل سجلّ.
+- ✅ **معالج استثناءات موحّد** (Problem Details) + **FluentValidation** عبر endpoint filter.
+- ✅ **Health `ready`** يفحص قاعدة البيانات فعليًّا.
+- ✅ بذر أوّلي: 15 صلاحية + دور SuperAdmin + وحدة جذر + مستخدم admin.
+- ✅ اختبارات: 10 خضراء (Result · PasswordHasher · JWT · CurrentUser/RLS-claims).
 
-## التحقّق (Definition of Done لـ Phase 0)
-- [x] `dotnet build` ينجح بلا تحذيرات.
-- [x] `dotnet test` أخضر (3/3).
-- [x] `npm run build` ينجح.
-- [x] تدفّق end-to-end مُثبَت بالكود.
-- [x] `brain/` + `progress/` مكتوبان.
+## التحقّق end-to-end (مُثبَت بالتشغيل على LocalDB)
+| السيناريو | النتيجة |
+|---|---|
+| `POST /auth/login` (admin) | 200 — SuperAdmin · 15 صلاحية · scope في الرمز |
+| `GET /auth/me` برمز صالح | 200 — يقرأ الهوية والنطاق |
+| `GET /auth/me` بلا رمز | 401 |
+| كلمة مرور خاطئة | 401 |
+| `POST /auth/refresh` | 200 — تدوير الرموز |
+| إعادة استخدام رمز قديم | 401 + إبطال السلسلة |
+| `GET /health/ready` (DB) | 200 |
 
-## ⏭️ الخطوة التالية مباشرة — Phase 1 (العمود الفقري)
-**يتطلّب اعتمادًا بشريًا قبل البدء.** يشمل:
-1. EF Core `AppDbContext` + SQL Server + أول migration.
-2. Auth: JWT + Refresh Token Rotation (reuse-detection).
-3. RBAC + Permission-based Authorization (Policy لكل endpoint).
-4. Org Units + **RLS Global Query Filter**.
-5. Audit + Soft Delete (واجهات + interceptors).
-6. Serilog (structured) + Correlation ID middleware.
-7. Health `ready` يفحص قاعدة البيانات فعليًّا.
+## ⏭️ الخطوة التالية — Phase 2 (الـ Primitives)
+**يتطلّب اعتمادًا بشريًا.** DataGrid (TanStack) · Drawer · Modal · Command Palette · Context Menu · FormBuilder (RHF+Zod) · ReportEngine (QuestPDF/ClosedXML/OpenXML) · i18n (AR/EN + RTL).
 
-> راجِع `progress/BLOCKERS.md` — لا blockers حاليًا، لكن قرار "الموديول الأول للـ slice" مطلوب قبل Phase 3.
+> blocker مفتوح: تحديد **الموديول الأول للـ Vertical Slice** (Phase 3) — راجِع `BLOCKERS.md`.
+
+## تشغيل سريع
+```bash
+dotnet ef database update --project src/Infrastructure --startup-project src/API
+dotnet run --project src/API            # يبذّر admin@ministry.gov / Admin@12345 (Development)
+```

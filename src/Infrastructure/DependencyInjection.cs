@@ -1,18 +1,45 @@
 using Application.Common.Abstractions;
+using Application.Common.Security;
+using Infrastructure.Identity;
+using Infrastructure.Persistence;
+using Infrastructure.Persistence.Interceptors;
 using Infrastructure.System;
+using Infrastructure.Time;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure;
 
 /// <summary>
-/// نقطة تسجيل خدمات طبقة Infrastructure (EF Core, Dapper, Auth, Storage, Jobs…).
-/// Phase 0: خدمة معلومات النظام فقط. Phase 1: DbContext + RLS + Audit + Auth.
+/// تسجيل خدمات طبقة Infrastructure: قاعدة البيانات (مع فلاتر العزل والتدقيق)،
+/// المصادقة، تجزئة كلمات المرور، وتوليد الرموز.
 /// </summary>
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        services.Configure<JwtOptions>(configuration.GetSection(JwtOptions.SectionName));
+
+        var connectionString = configuration.GetConnectionString("Default")
+            ?? throw new InvalidOperationException("ConnectionStrings:Default غير مُعرّف.");
+
+        services.AddHttpContextAccessor();
+        services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
+        services.AddScoped<ICurrentUser, CurrentUser>();
+        services.AddScoped<IPasswordHasher, PasswordHasher>();
+        services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+
+        services.AddScoped<AuditingInterceptor>();
+        services.AddDbContext<AppDbContext>((sp, options) =>
+        {
+            options.UseSqlServer(connectionString, sql => sql.EnableRetryOnFailure());
+            options.AddInterceptors(sp.GetRequiredService<AuditingInterceptor>());
+        });
+        services.AddScoped<IAppDbContext>(sp => sp.GetRequiredService<AppDbContext>());
+
         services.AddScoped<ISystemInfoService, SystemInfoService>();
+
         return services;
     }
 }

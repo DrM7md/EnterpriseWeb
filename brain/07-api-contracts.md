@@ -32,8 +32,20 @@
 }
 ```
 
+### عقود المصادقة (Phase 1) — `/api/v1/auth`
+| المسار | الوصف | التصريح |
+|---|---|---|
+| `POST /auth/login` | `{email, password}` → `{accessToken, refreshToken, user{roles,permissions,unitId}}` | عام |
+| `POST /auth/refresh` | `{refreshToken}` → رموز جديدة (تدوير) | عام |
+| `POST /auth/logout` | `{refreshToken}` → 204 (إبطال) | عام |
+| `GET /auth/me` | معلومات المستخدم الحالي من الرمز | مُصادَق |
+
+- **access token** قصير العمر (15د) يحمل: `sub` · `unit_id` · `unit_scope[]` · `permission[]`.
+- **refresh token** (7 أيام) يُخزَّن بـ hash؛ التدوير يُبطل القديم؛ إعادة استخدام رمز مُبطَل ⇒ **إبطال السلسلة كلها**.
+- التصريح على endpoints الأعمال عبر سياسة `perm:{code}` (مثال: `.RequirePermission(Permissions.Users.Read)`).
+
 ### `GET /health/live` · `GET /health/ready`
-فحوص صحّة (liveness/readiness). Phase 1 يضيف فحص قاعدة البيانات للـ ready.
+فحوص صحّة. `ready` يفحص الاتصال بقاعدة البيانات (`AddDbContextCheck`).
 
 ## مثال خطأ (Problem Details)
 ```json

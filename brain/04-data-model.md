@@ -1,6 +1,6 @@
 # 04 — نموذج البيانات (Data Model)
 
-> Phase 0: المبادئ والعقود فقط (لا جداول بعد). الـ schema الفعلي يبدأ في Phase 1.
+> Phase 1: الجداول الأساسية مُنشأة (migration `InitialCreate`). كيانات الأعمال تُضاف في Phase 3+.
 
 ## العقود الإلزامية لكل كيان
 | الجانب | القاعدة |
@@ -11,13 +11,15 @@
 | التزامن | `RowVersion` (`rowversion`/`timestamp`) — Optimistic Concurrency. |
 | المفاتيح | `Id` (إما `int`/`bigint` identity أو `Guid` حسب الجدول — يُقرَّر في Phase 1). |
 
-## الجداول الأساسية (Cross-Cutting — Phase 1)
-- **OrgUnits** — التسلسل الهرمي (`Id`, `ParentId`, `Name`, `Path`/`HierarchyId`).
-- **Users** — الحسابات + ربط بوحدة تنظيمية.
-- **Roles** / **Permissions** / **RolePermissions** / **UserRoles** — RBAC.
-- **RefreshTokens** — مع تدوير وكشف إعادة الاستخدام.
-- **AuditLogs** — (Entity, EntityId, Action, Before, After, UserId, AtUtc, CorrelationId).
-- **Modules** / **FeatureFlags** — Module Registry لكل قسم (config في DB).
+## الجداول الأساسية (Cross-Cutting — ✅ مُنشأة في Phase 1)
+- **OrgUnits** — التسلسل الهرمي (`Id`, `ParentId`, `Name`, `Code`, `Path` مادي، `IsActive`). فهرس على `Code` (unique) و`Path`.
+- **Users** — الحسابات (`Email`/`NormalizedEmail` unique، `PasswordHash`، `OwnerUnitId`). تخضع لفلتر العزل.
+- **Roles** / **Permissions** / **RolePermissions** / **UserRoles** — RBAC (`Permission.Code` unique).
+- **RefreshTokens** — `TokenHash` (مفهرس)، `ExpiresAtUtc`، `RevokedAtUtc`، `ReplacedByTokenHash`.
+- **AuditLogs** — (EntityName, EntityId, Action, ChangesJson, UserId, OwnerUnitId, CorrelationId, TimestampUtc). فهارس على (EntityName,EntityId) و TimestampUtc.
+- **Modules** / **FeatureFlags** — Module Registry لكل قسم (config في DB) — ⏳ Phase 4.
+
+كل الكيانات القابلة للحذف تحمل `IsDeleted`/`DeletedAtUtc`/`DeletedBy` + `RowVersion` للتزامن.
 
 ## استراتيجية الفهرسة (مبدأ)
 - فهرس على كل FK، وعلى `OwnerUnitId` (يدخل في كل استعلام معزول).
