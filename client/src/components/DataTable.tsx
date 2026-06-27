@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 
 export interface Column<T> {
   key: string;
@@ -8,11 +9,6 @@ export interface Column<T> {
   sortable?: boolean;
 }
 
-/**
- * DataTable — primitive الجدول (Table View فقط، opt-in للبقية لاحقًا).
- * يعطي: ترتيب على الخادم، حالات loading/empty/error، ترقيم.
- * Phase 2 سيوسّعه إلى DataGrid كامل (TanStack Table + Virtual) — هذه النواة المستهلَكة.
- */
 interface DataTableProps<T> {
   columns: Column<T>[];
   rows: T[];
@@ -25,50 +21,44 @@ interface DataTableProps<T> {
   rowActions?: (row: T) => ReactNode;
 }
 
+/**
+ * DataTable — primitive الجدول (Table View). يعطي: ترتيب على الخادم، حالات
+ * loading/empty/error. Phase لاحق: virtualization عبر TanStack Virtual عند الحاجة.
+ */
 export function DataTable<T>({
-  columns,
-  rows,
-  rowKey,
-  isLoading,
-  isError,
-  sortBy,
-  sortDescending,
-  onSort,
-  rowActions,
+  columns, rows, rowKey, isLoading, isError, sortBy, sortDescending, onSort, rowActions,
 }: DataTableProps<T>) {
   const { t } = useTranslation();
+  const colSpan = columns.length + (rowActions ? 1 : 0);
+
   return (
-    <div className="table-wrap">
-      <table className="data-table">
+    <div className="overflow-hidden rounded-xl border border-border">
+      <table className="w-full border-collapse text-sm">
         <thead>
-          <tr>
+          <tr className="bg-panel">
             {columns.map((col) => (
               <th
                 key={col.key}
-                className={col.sortable ? 'sortable' : undefined}
                 onClick={() => col.sortable && onSort?.(col.key)}
+                className={`border-b border-border px-3.5 py-2.5 text-start font-medium text-muted whitespace-nowrap ${col.sortable ? 'cursor-pointer select-none hover:text-fg' : ''}`}
               >
-                {col.header}
-                {sortBy === col.key && <span className="sort-ind">{sortDescending ? ' ↓' : ' ↑'}</span>}
+                <span className="inline-flex items-center gap-1">
+                  {col.header}
+                  {sortBy === col.key && (sortDescending ? <ChevronDown size={13} className="text-accent" /> : <ChevronUp size={13} className="text-accent" />)}
+                </span>
               </th>
             ))}
-            {rowActions && <th className="actions-col">{t('common.actions')}</th>}
+            {rowActions && <th className="w-px border-b border-border px-3.5 py-2.5 text-start font-medium text-muted whitespace-nowrap">{t('common.actions')}</th>}
           </tr>
         </thead>
         <tbody>
-          {isLoading && (
-            <tr><td colSpan={columns.length + 1} className="table-state">{t('common.loading')}</td></tr>
-          )}
-          {isError && !isLoading && (
-            <tr><td colSpan={columns.length + 1} className="table-state error">{t('common.loadError')}</td></tr>
-          )}
-          {!isLoading && !isError && rows.length === 0 && (
-            <tr><td colSpan={columns.length + 1} className="table-state">{t('common.empty')}</td></tr>
-          )}
+          {isLoading && <tr><td colSpan={colSpan} className="px-3.5 py-7 text-center text-muted">{t('common.loading')}</td></tr>}
+          {isError && !isLoading && <tr><td colSpan={colSpan} className="px-3.5 py-7 text-center text-danger">{t('common.loadError')}</td></tr>}
+          {!isLoading && !isError && rows.length === 0 && <tr><td colSpan={colSpan} className="px-3.5 py-7 text-center text-muted">{t('common.empty')}</td></tr>}
           {!isLoading && !isError && rows.map((row) => (
-            <tr key={rowKey(row)}>
-              {columns.map((col) => <td key={col.key}>{col.render(row)}</td>)}
-              {rowActions && <td className="actions-col">{rowActions(row)}</td>}
+            <tr key={rowKey(row)} className="border-b border-border last:border-0 hover:bg-hover/50">
+              {columns.map((col) => <td key={col.key} className="px-3.5 py-2.5">{col.render(row)}</td>)}
+              {rowActions && <td className="w-px px-3.5 py-2.5 whitespace-nowrap">{rowActions(row)}</td>}
             </tr>
           ))}
         </tbody>

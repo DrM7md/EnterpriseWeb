@@ -1,2 +1,32 @@
-/* أنماط أساسية فقط — التصميم الكامل (tokens + shadcn + dark/light) في Phase 2. */
+@import "tailwindcss";
+@import "@fontsource/ibm-plex-sans-arabic/400.css";
+@import "@fontsource/ibm-plex-sans-arabic/500.css";
+@import "@fontsource/ibm-plex-sans-arabic/600.css";
+@import "@fontsource/ibm-plex-sans-arabic/700.css";
+@import "@fontsource/cairo/400.css";
+@import "@fontsource/cairo/600.css";
+@import "@fontsource/cairo/700.css";
+@import "@fontsource/tajawal/400.css";
+@import "@fontsource/tajawal/500.css";
+@import "@fontsource/tajawal/700.css";
+
+/*
+ * tokens الخاصة بـ Tailwind تشير إلى متغيّرات السمة الموجودة في App.css
+ * (المُعرّفة لكل data-theme) ⇒ أدوات Tailwind تحترم الفاتح/الداكن تلقائيًا.
+ */
+@theme {
+  --color-bg: var(--bg);
+  --color-panel: var(--panel);
+  --color-border: var(--border);
+  --color-fg: var(--text);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--on-accent);
+  --color-danger: var(--danger);
+  --color-hover: var(--hover);
+
+  --radius: 0.625rem;
+  --font-sans: "IBM Plex Sans Arabic", ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
 html, body, #root { min-height: 100%; }

@@ -131,6 +131,21 @@
         "light": "Light",
         "dark": "Dark"
       },
+      "font": "Font",
+      "fontDesc": "Choose the interface font (all support Arabic).",
+      "fontOption": {
+        "plex": "IBM Plex Sans Arabic",
+        "cairo": "Cairo",
+        "tajawal": "Tajawal",
+        "system": "System font"
+      },
+      "fontSize": "Font size",
+      "fontSizeDesc": "Scales the entire interface up or down.",
+      "fontSizeOption": {
+        "sm": "Small",
+        "md": "Medium",
+        "lg": "Large"
+      },
       "addPattern": "Add pattern",
       "addPatternDesc": "How add/edit forms open.",
       "addPatternOption": {

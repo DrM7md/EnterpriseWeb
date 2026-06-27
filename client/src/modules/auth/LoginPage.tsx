@@ -4,6 +4,9 @@ import { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
 import { authService } from './auth.service';
+import { Button } from '../../components/ui/Button';
+import { Input } from '../../components/ui/Input';
+import { Card } from '../../components/ui/Card';
 
 export function LoginPage() {
   const { t } = useTranslation();
@@ -32,21 +35,27 @@ export function LoginPage() {
   };
 
   return (
-    <main className="auth-shell">
-      <form className="auth-card" onSubmit={onSubmit}>
-        <span className="badge">{t('appName')}</span>
-        <h1>{t('auth.title')}</h1>
-        <label className="field">
-          <span>{t('auth.email')}</span>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        </label>
-        <label className="field">
-          <span>{t('auth.password')}</span>
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-        </label>
-        {error && <p className="form-error">{error}</p>}
-        <button type="submit" className="btn-primary" disabled={busy}>{busy ? '…' : t('auth.submit')}</button>
-      </form>
+    <main className="grid min-h-screen place-items-center bg-bg p-6">
+      <Card className="w-[360px] max-w-full p-8 shadow-xl">
+        <form onSubmit={onSubmit} className="flex flex-col gap-4">
+          <span className="inline-flex w-fit items-center gap-2 rounded-full border border-accent px-3 py-1 text-xs text-accent">
+            🏛️ {t('appName')}
+          </span>
+          <h1 className="mt-1 text-xl font-semibold">{t('auth.title')}</h1>
+          <label className="flex flex-col gap-1.5 text-[0.8125rem] text-muted">
+            {t('auth.email')}
+            <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          </label>
+          <label className="flex flex-col gap-1.5 text-[0.8125rem] text-muted">
+            {t('auth.password')}
+            <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          </label>
+          {error && <p className="text-[0.8125rem] text-danger">{error}</p>}
+          <Button type="submit" disabled={busy} className="mt-1 w-full">
+            {busy ? '…' : t('auth.submit')}
+          </Button>
+        </form>
+      </Card>
     </main>
   );
 }

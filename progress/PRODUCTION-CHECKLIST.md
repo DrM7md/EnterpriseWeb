@@ -50,7 +50,8 @@
 - ✅ Primitives مُستهلَكة: DataTable · Drawer · FormBuilder (RHF+Zod) · async export.
 - ✅ Loading/Empty/Error states · إخفاء الإجراءات حسب الصلاحية · i18n + RTL.
 - ✅ **سمات (فاتح/داكن)** عبر `data-theme` + tokens CSS · تفضيلات (نمط النماذج drawer/modal) · صفحة إعدادات قابلة للتوسعة.
-- 🟡 **shadcn/ui + Tailwind** (التصميم الحالي tokens CSS منظّمة) · DataGrid virtualization · Command Palette.
+- ✅ **Tailwind v4 + shadcn-style primitives** (Button/Input/Badge/Card بـ cva) + **Lucide icons** — مدمجة مع نظام السمة (tokens تشير لمتغيّرات `data-theme`).
+- 🟡 المتبقّي من Phase 2: DataGrid virtualization (TanStack Virtual) · Command Palette (⌘K).
 
 ## الجودة والتسليم
 - ✅ 35 اختبارًا أخضر · CI (GitHub Actions) · Docker multi-stage · docker-compose.

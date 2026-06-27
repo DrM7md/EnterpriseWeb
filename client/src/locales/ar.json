@@ -131,6 +131,21 @@
         "light": "فاتح",
         "dark": "داكن"
       },
+      "font": "نوع الخط",
+      "fontDesc": "اختر خط الواجهة (كلها تدعم العربية).",
+      "fontOption": {
+        "plex": "IBM Plex Sans Arabic",
+        "cairo": "Cairo (القاهرة)",
+        "tajawal": "Tajawal (تجوال)",
+        "system": "خط النظام"
+      },
+      "fontSize": "حجم الخط",
+      "fontSizeDesc": "يكبّر أو يصغّر الواجهة بالكامل.",
+      "fontSizeOption": {
+        "sm": "صغير",
+        "md": "متوسط",
+        "lg": "كبير"
+      },
       "addPattern": "نمط الإضافة",
       "addPatternDesc": "طريقة فتح نماذج الإضافة والتعديل.",
       "addPatternOption": {
