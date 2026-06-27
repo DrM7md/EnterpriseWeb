@@ -238,3 +238,15 @@ body {
 .segmented button + button { border-inline-start: 1px solid var(--border); }
 
 .settings-empty { color: var(--muted); font-size: 14px; line-height: 1.7; max-width: 520px; }
+
+/* ===== Org Units tree ===== */
+.tree { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+.tree-row { display: flex; align-items: center; gap: 14px; padding: 11px 14px; border-bottom: 1px solid var(--border); font-size: 14px; }
+.tree-row:last-child { border-bottom: 0; }
+.tree-row:hover { background: color-mix(in oklab, var(--panel) 50%, transparent); }
+.tree-name { display: inline-flex; align-items: center; gap: 8px; flex: 1; }
+.tree-branch { color: var(--faint, var(--muted)); }
+.tree-code { background: #1a1d25; color: var(--muted); padding: 2px 7px; border-radius: 6px; font-size: 11px; }
+.tree-meta { color: var(--muted); font-size: 12px; white-space: nowrap; }
+.tree-actions { display: inline-flex; gap: 8px; }
+.field select { background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 8px; padding: 9px 12px; font-family: inherit; }

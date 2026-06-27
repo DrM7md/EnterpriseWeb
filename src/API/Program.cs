@@ -155,6 +155,7 @@ try
     v1.MapAuthEndpoints();
     v1.MapUsersEndpoints();
     v1.MapRolesEndpoints();
+    v1.MapOrgUnitsEndpoints();
     v1.MapModulesEndpoints();
     v1.MapReportsEndpoints();
 

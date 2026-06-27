@@ -9,6 +9,7 @@ import { usePreferencesStore } from '../store/preferencesStore';
 const NAV: Record<string, { to: string; labelKey: string }> = {
   users: { to: '/users', labelKey: 'nav.users' },
   roles: { to: '/roles', labelKey: 'nav.roles' },
+  'org-units': { to: '/org-units', labelKey: 'nav.orgUnits' },
 };
 
 /** الهيكل الرئيسي: شريط جانبي + رأس + منطقة المحتوى. */

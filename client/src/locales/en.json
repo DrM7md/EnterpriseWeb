@@ -29,7 +29,24 @@
   "nav": {
     "users": "Users",
     "roles": "Roles",
+    "orgUnits": "Org Units",
     "settings": "Settings"
+  },
+  "orgUnits": {
+    "title": "Organizational Units",
+    "subtitle": "Ministry structure — each unit owns its records (isolation basis).",
+    "new": "+ New unit",
+    "createTitle": "New organizational unit",
+    "editTitle": "Edit unit",
+    "noParent": "— No parent (top level) —",
+    "confirmDelete": "Delete unit \"{{name}}\"?",
+    "childUser": "{{children}} sub-units · {{users}} users",
+    "field": {
+      "name": "Unit name",
+      "code": "Code",
+      "parent": "Parent unit",
+      "active": "Unit active"
+    }
   },
   "auth": {
     "title": "Sign in",

@@ -1,5 +1,6 @@
 using Application.Features.Auth;
 using Application.Features.Modules;
+using Application.Features.OrgUnits;
 using Application.Features.Roles;
 using Application.Features.Users;
 using FluentValidation;
@@ -20,6 +21,7 @@ public static class DependencyInjection
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IModuleRegistry, ModuleRegistry>();
         services.AddScoped<IRoleService, RoleService>();
+        services.AddScoped<IOrgUnitService, OrgUnitService>();
         return services;
     }
 }

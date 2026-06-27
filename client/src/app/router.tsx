@@ -2,6 +2,7 @@ import { Navigate, createBrowserRouter } from 'react-router-dom';
 import { AppShell } from '../layouts/AppShell';
 import { LoginPage } from '../modules/auth/LoginPage';
 import { RolesPage } from '../modules/roles/RolesPage';
+import { OrgUnitsPage } from '../modules/orgunits/OrgUnitsPage';
 import { UsersPage } from '../modules/users/UsersPage';
 import { SettingsPage } from '../modules/settings/SettingsPage';
 import { SETTINGS_SECTIONS } from '../modules/settings/settings.config';
@@ -22,6 +23,7 @@ export const router = createBrowserRouter([
       { index: true, element: <Navigate to="/users" replace /> },
       { path: 'users', element: <UsersPage /> },
       { path: 'roles', element: <RolesPage /> },
+      { path: 'org-units', element: <OrgUnitsPage /> },
       {
         path: 'settings',
         children: [
