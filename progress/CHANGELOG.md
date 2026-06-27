@@ -1,5 +1,16 @@
 # 📝 CHANGELOG
 
+## 2026-06-27 — OpenTelemetry (traces + metrics) — إكمال المراقبة
+**ماذا:** مراقبة موزّعة قياسية (OTel) للـ API.
+**لماذا:** إغلاق فجوة Observability في Production Checklist؛ والـ Health Check وحده غير كافٍ.
+
+- `API/Observability/TelemetryExtensions.cs`: traces (AspNetCore + HttpClient + SqlClient) + metrics (AspNetCore + HttpClient + Runtime).
+- مُصدِّر: **OTLP** إن ضُبط `Otel:OtlpEndpoint` (إنتاج)، وإلا **Console** (تطوير) · مقاييس عبر **Prometheus** على `/metrics`.
+- المورد `service.name=EnterpriseSystem.Api` · **Correlation ID مربوط بالـ TraceId** (نفس Activity) · استبعاد `/metrics` و`/health` من التتبّع.
+
+**التحقّق:** build 0 تحذير · 35/35 اختبار · e2e: `/metrics` يُرجع `http_server_request_duration` + `dotnet_*`؛ console يُظهر spans (HTTP route + SQL `db.system.name=microsoft.sql_server`).
+
+
 ## 2026-06-27 — Phase 7: التوثيق النهائي والتسليم
 **ماذا:** استكمال `brain/` ليُسلَّم النظام لأي فريق دون شرح شفهي.
 **لماذا:** «ما لا يُوثَّق = غير موجود» — التسليم عقد.

@@ -30,6 +30,14 @@
 - مُتحقَّق e2e: enqueue 202 → poll Processing→Completed(rows=3) → download (Excel صالح، أكّده `file`).
 - **إشعار عند الجاهزية:** حاليًا polling؛ إشعار لحظي (SignalR) لاحقًا.
 
+## المراقبة (OpenTelemetry) — ✅ مُنفّذ
+- **Traces:** instrumentation لـ AspNetCore (HTTP server spans + route) · HttpClient · SqlClient (DB spans).
+- **Metrics:** AspNetCore + HttpClient + Runtime عبر **Prometheus** على `/metrics` (سحب).
+- **المُصدِّر:** OTLP إن ضُبط `Otel:OtlpEndpoint` (الإنتاج)، وإلا Console في التطوير.
+- المورد `service.name=EnterpriseSystem.Api`؛ والـ **Correlation ID مربوط بالـ TraceId** (نفس `Activity`).
+- مُتحقَّق: `/metrics` يُرجع `http_server_request_duration` + `dotnet_*`؛ والـ console يُظهر spans (HTTP + SQL).
+- المتبقّي: ربط collector + لوحات/تنبيهات (Grafana/Azure Monitor).
+
 ## المتبقّي في Phase 6
 - **Output/Response Caching** مع invalidation للقراءات القابلة للتخزين.
 - **Load test** فعلي لإثبات الـ SLOs تحت حِمل + لوحات OpenTelemetry.

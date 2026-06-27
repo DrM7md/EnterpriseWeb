@@ -28,7 +28,8 @@
 ## المراقبة (Observability)
 - ✅ Serilog (structured) · Correlation ID عبر كل طبقة · Health Checks (`live`/`ready` مع DB).
 - ✅ معالج استثناءات موحّد (Problem Details) دون تسريب.
-- ⬜ **OpenTelemetry** (traces/metrics) + لوحات.
+- ✅ **OpenTelemetry** — traces (AspNetCore + HttpClient + SqlClient) + metrics (Prometheus `/metrics`)؛ OTLP للإنتاج. Correlation ID مربوط بالـ TraceId.
+- ⬜ لوحات/تنبيهات (Grafana/Azure Monitor) — اربط الـ collector بالمُصدِّر OTLP.
 
 ## الميزات المؤسسية
 - ✅ Module Registry + **Feature Flags لكل قسم** (config في DB) + بوابة `RequireModule` (+ caching).

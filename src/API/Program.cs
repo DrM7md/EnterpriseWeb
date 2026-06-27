@@ -4,6 +4,7 @@ using System.Threading.RateLimiting;
 using System.IdentityModel.Tokens.Jwt;
 using API.Endpoints;
 using API.Middleware;
+using API.Observability;
 using API.Security;
 using Application;
 using Application.Common.Security;
@@ -46,6 +47,9 @@ try
     builder.Services.AddOpenApi();
     builder.Services.AddProblemDetails();
     builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
+    // --- المراقبة (OpenTelemetry: traces + metrics) ---
+    builder.Services.AddObservability(builder.Configuration, builder.Environment);
 
     // --- المصادقة (JWT) ---
     var jwt = builder.Configuration.GetSection(JwtOptions.SectionName).Get<JwtOptions>()
@@ -139,9 +143,10 @@ try
     app.UseAuthentication();
     app.UseAuthorization();
 
-    // Health probes.
+    // Health probes + مقاييس Prometheus (/metrics).
     app.MapHealthChecks("/health/live");
     app.MapHealthChecks("/health/ready");
+    app.MapPrometheusScrapingEndpoint();
 
     // API v1.
     var v1 = app.MapGroup("/api/v1");
