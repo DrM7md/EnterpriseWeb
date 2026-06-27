@@ -7,6 +7,7 @@ import { useAuthStore } from '../store/authStore';
 import { usePreferencesStore } from '../store/preferencesStore';
 import { Button } from '../components/ui/Button';
 import { CommandPalette } from '../components/CommandPalette';
+import { commandShortcut } from '../lib/platform';
 import { cn } from '../lib/cn';
 
 /** خريطة مفاتيح الموديولات إلى عناصر التنقّل (التسمية تُترجَم + أيقونة). */
@@ -75,7 +76,7 @@ export function AppShell() {
               className="flex items-center gap-2 rounded-lg border border-border bg-bg px-3 py-1.5 text-[0.8125rem] text-muted transition-colors hover:border-accent hover:text-fg max-md:hidden"
             >
               <Command size={14} /> {t('palette.open')}
-              <kbd className="rounded border border-border px-1.5 text-[0.6875rem]">⌘K</kbd>
+              <kbd className="rounded border border-border px-1.5 text-[0.6875rem]">{commandShortcut}</kbd>
             </button>
             <Button variant="ghost" size="icon-sm" onClick={toggleTheme} aria-label={t('common.toggleTheme')} title={t('common.toggleTheme')}>
               {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}

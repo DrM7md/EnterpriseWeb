@@ -9,6 +9,7 @@ import { useModules } from '../modules/modules/modules.api';
 import { usePreferencesStore } from '../store/preferencesStore';
 import { useAuthStore } from '../store/authStore';
 import { authService } from '../modules/auth/auth.service';
+import { commandShortcut } from '../lib/platform';
 
 const NAV_ICONS: Record<string, { icon: LucideIcon; to: string; labelKey: string }> = {
   users: { icon: Users, to: '/users', labelKey: 'nav.users' },
@@ -92,7 +93,7 @@ export function CommandPalette() {
             <Item onSelect={() => run(onLogout)}><LogOut size={16} /> {t('common.logout')}</Item>
           </Command.Group>
         </Command.List>
-        <div className="border-t border-border px-4 py-2 text-[0.6875rem] text-muted">⌘K / Ctrl+K</div>
+        <div className="border-t border-border px-4 py-2 text-[0.6875rem] text-muted">{commandShortcut}</div>
       </Command>
     </div>
   );
