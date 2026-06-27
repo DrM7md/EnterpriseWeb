@@ -1,39 +1,46 @@
 # 📍 STATUS — الحالة الحالية
 
-- **المرحلة الحالية:** Phase 1 — العمود الفقري ✅ **مكتملة**
+- **المرحلة الحالية:** Vertical Slice الأول (Users) ✅ **مكتمل end-to-end** — يثبت المعمارية بكود حقيقي.
 - **آخر تحديث:** 2026-06-27
-- **نسبة الإنجاز الكلية:** Phase 0 + 1 من 7 منجزتان
+- **التغطية:** Phase 0 ✅ · Phase 1 ✅ · Phase 2 (primitives) جزئيًّا via-slice · Phase 3 (الـ slice الأول) ✅
 
-## ما أُنجِز في Phase 1 (Cross-Cutting)
-- ✅ **EF Core + SQL Server** (LocalDB محليًّا) + أول migration (`InitialCreate`) مُطبَّق.
-- ✅ **Auth: JWT + Refresh Token Rotation** مع **كشف إعادة الاستخدام** (إبطال السلسلة عند التسريب).
-- ✅ **RBAC + Permission-based Authorization** — سياسات ديناميكية `perm:{code}` لكل endpoint.
-- ✅ **Org Units + RLS** — Global Query Filter يُصفّي `IOwnedByUnit` حسب نطاق المستخدم (مُضمَّن في الرمز).
-- ✅ **Audit + Soft Delete** — interceptor يضبط حقول التدقيق، يحوّل الحذف لناعم، ويكتب `AuditLog`.
-- ✅ **Serilog (structured) + Correlation ID** middleware يمرّ عبر كل سجلّ.
-- ✅ **معالج استثناءات موحّد** (Problem Details) + **FluentValidation** عبر endpoint filter.
-- ✅ **Health `ready`** يفحص قاعدة البيانات فعليًّا.
-- ✅ بذر أوّلي: 15 صلاحية + دور SuperAdmin + وحدة جذر + مستخدم admin.
-- ✅ اختبارات: 10 خضراء (Result · PasswordHasher · JWT · CurrentUser/RLS-claims).
+## ما أُنجِز (Slice: إدارة المستخدمين)
+### Backend
+- `PagedRequest`/`PagedResult<T>` primitive (تطبيع آمن).
+- `IUserService`: List (مُرقّم/مُفلتر/مُرتّب، **معزول تلقائيًا بـ RLS**، DTO projection بلا N+1) + Get + Create + Update + Delete (حذف ناعم).
+- صلاحيات `users.*` لكل endpoint + FluentValidation + audit صحيح (إصلاح: سجل الإنشاء بعد الحفظ).
 
-## التحقّق end-to-end (مُثبَت بالتشغيل على LocalDB)
-| السيناريو | النتيجة |
+### Frontend (يستهلك primitives بُنيت أثناء السلايس)
+- مصادقة: Zustand store (مُخزّن) + axios interceptors (إرفاق JWT + Correlation ID + **تدوير تلقائي عند 401**).
+- primitives: `DataTable` (table view + ترتيب + حالات) · `Drawer` · نموذج RHF+Zod.
+- شاشة المستخدمين: بحث + ترقيم + ترتيب + إنشاء/تعديل/حذف + إخفاء الأزرار حسب الصلاحية.
+- Router + حارس مصادقة + AppShell + Login.
+
+## التحقّق
+| الطبقة | النتيجة |
 |---|---|
-| `POST /auth/login` (admin) | 200 — SuperAdmin · 15 صلاحية · scope في الرمز |
-| `GET /auth/me` برمز صالح | 200 — يقرأ الهوية والنطاق |
-| `GET /auth/me` بلا رمز | 401 |
-| كلمة مرور خاطئة | 401 |
-| `POST /auth/refresh` | 200 — تدوير الرموز |
-| إعادة استخدام رمز قديم | 401 + إبطال السلسلة |
-| `GET /health/ready` (DB) | 200 |
+| `dotnet build` (Release) | 0 تحذير |
+| `dotnet test` | **23/23** خضراء |
+| CRUD e2e على LocalDB | list/get/create/update/delete + RLS + soft-delete + audit صحيح + 409/400/401/403 ✅ |
+| `npm run build` (tsc strict + vite) | نجاح |
+| `npm run lint` | نجاح (تحذير HMR وحيد) |
+| CORS للـ SPA (preflight + login) | 204 + 200 مع ACAO ✅ |
 
-## ⏭️ الخطوة التالية — Phase 2 (الـ Primitives)
-**يتطلّب اعتمادًا بشريًا.** DataGrid (TanStack) · Drawer · Modal · Command Palette · Context Menu · FormBuilder (RHF+Zod) · ReportEngine (QuestPDF/ClosedXML/OpenXML) · i18n (AR/EN + RTL).
+## ⏭️ التالي
+**تقسيمان مقترحان (يتطلّبان قرارك):**
+1. **Phase 4 — استخراج Template + Module Registry:** تعميم نمط Users (Backend + Frontend) + Feature Flags لكل قسم.
+2. **تصليب الـ Primitives (Phase 2 كامل):** shadcn/ui + Tailwind tokens · DataGrid (TanStack virtualization) · Command Palette · ReportEngine (QuestPDF) · i18n (AR/EN + RTL switching).
 
-> blocker مفتوح: تحديد **الموديول الأول للـ Vertical Slice** (Phase 3) — راجِع `BLOCKERS.md`.
+## فجوات معروفة (موثّقة بصدق)
+- الواجهة وظيفية لكن **بلا shadcn/Tailwind بعد** (CSS مباشر) — تصليب التصميم في Phase 2 الكامل.
+- **E2E بالمتصفّح (Playwright)** و**اختبارات تكامل (Testcontainers)** مؤجّلة حتى توفّر بيئة Docker/متصفّح.
+- إدارة أدوار المستخدم في النموذج مبسّطة (RoleIds=[] في التعديل) — تُستكمل مع شاشة الأدوار.
 
-## تشغيل سريع
+## تشغيل
 ```bash
-dotnet ef database update --project src/Infrastructure --startup-project src/API
-dotnet run --project src/API            # يبذّر admin@ministry.gov / Admin@12345 (Development)
+# API (نافذة):
+ASPNETCORE_URLS=http://localhost:5099 dotnet run --project src/API
+# الواجهة (نافذة أخرى):
+cd client && cp .env.example .env && npm run dev    # http://localhost:5173
+# دخول: admin@ministry.gov / Admin@12345
 ```

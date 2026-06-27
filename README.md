@@ -62,7 +62,7 @@ cd client && npm run build
 ## للمُوجِّهين / الوكلاء الجدد
 ابدأ دائمًا بقراءة **`progress/STATUS.md`** ثم **`brain/09-agent-onboarding.md`**. ما لا يُوثَّق = غير موجود.
 
-> الحالة الحالية: **Phase 1 (العمود الفقري) مكتملة** — Auth (JWT + Refresh Rotation) · RBAC · Org Units + RLS · Audit · Soft Delete · Serilog · Health. التالي: Phase 2 (الـ Primitives).
+> الحالة الحالية: **أول Vertical Slice (إدارة المستخدمين) مكتمل end-to-end** — backend (CRUD + RLS + audit + authz) و frontend (login + جدول + drawer form). التالي: Phase 4 (Template + Module Registry) أو تصليب الـ Primitives.
 
 ### حساب أوّلي (Development seed)
 `admin@ministry.gov` / `Admin@12345` — غيّره فورًا في الإنتاج.

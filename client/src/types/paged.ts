@@ -1,0 +1,10 @@
+/** يطابق Shared.Pagination.PagedResult<T> على الخادم. */
+export interface PagedResult<T> {
+  items: T[];
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  totalPages: number;
+  hasNext: boolean;
+  hasPrevious: boolean;
+}

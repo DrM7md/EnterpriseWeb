@@ -8,8 +8,8 @@
 | auth | JWT + Refresh + RBAC | ✅ مُنفّذ (Phase 1) | core |
 | org-units | الوحدات التنظيمية + RLS | ✅ أساس مُنفّذ (Phase 1) — CRUD في Phase 3+ | core |
 | audit | سجل التدقيق (كتابة تلقائية) | ✅ مُنفّذ (Phase 1) — واجهة عرض لاحقًا | core |
-| primitives | DataGrid/Drawer/Modal/FormBuilder/ReportEngine | ⏳ Phase 2 | — |
-| *(الموديول الأول للـ slice)* | يُحدَّد قبل Phase 3 | ⏳ Phase 3 | per-department |
+| primitives | DataTable/Drawer/Form (نواة) | 🟡 جزئي — بُنيت أثناء slice الـ Users | — |
+| **users** | إدارة المستخدمين (الـ slice الأول، المرجع/Template) | ✅ مُنفّذ end-to-end | per-department |
 
 ## قواعد التسجيل
 - موديولات **core** لا تُطفأ (أساس النظام).

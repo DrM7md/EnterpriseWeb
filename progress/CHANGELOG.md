@@ -1,5 +1,23 @@
 # 📝 CHANGELOG
 
+## 2026-06-27 — Vertical Slice الأول: إدارة المستخدمين (Users)
+**ماذا:** أول موديول end-to-end (backend + frontend) يثبت المعمارية بكود حقيقي.
+**لماذا:** الـ slice المُثبَت > المخطّط النظري؛ والـ primitives تُبنى وهي مُستهلَكة (ADR-0004).
+
+### Backend
+- `Shared.Pagination`: `PagedRequest`/`PagedResult<T>`.
+- `Application.Features.Users`: DTOs + `IUserService` (List/Get/Create/Update/Delete) + validators + errors.
+- `API`: `UsersEndpoints` بصلاحيات `users.*` + ربط query params اختياري.
+- إصلاحات: `implicit Error→Result` · `AuditingInterceptor` تدقيق على مرحلتين (EntityId الصحيح للإنشاء).
+
+### Frontend
+- مصادقة: `authStore` (Zustand مُخزّن) + axios interceptors (JWT + Correlation ID + تدوير 401).
+- primitives: `DataTable` · `Drawer` · نموذج RHF+Zod (`users.schema`).
+- شاشة `UsersPage` (بحث/ترقيم/ترتيب/CRUD + إخفاء حسب الصلاحية) · `LoginPage` · `AppShell` · Router + حارس.
+
+**التحقّق:** build 0 تحذير · 23/23 اختبار · CRUD e2e على LocalDB (RLS/soft-delete/audit/authz) · `npm run build` + lint · CORS للـ SPA مُتحقَّق.
+
+
 ## 2026-06-27 — Phase 1: العمود الفقري (Cross-Cutting)
 **ماذا:** أساس آمن مُراقَب يطبّق العزل تلقائيًا.
 **لماذا:** كل موديول لاحق يرث الأمان والعزل والتدقيق دون إعادة كتابة.
