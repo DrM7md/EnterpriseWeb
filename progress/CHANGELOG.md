@@ -1,5 +1,19 @@
 # 📝 CHANGELOG
 
+## 2026-06-27 — Phase 7: التوثيق النهائي والتسليم
+**ماذا:** استكمال `brain/` ليُسلَّم النظام لأي فريق دون شرح شفهي.
+**لماذا:** «ما لا يُوثَّق = غير موجود» — التسليم عقد.
+
+- `brain/12-erd.md` — ERD (Mermaid) من الكيانات الفعلية + ملاحظات العزل/الفهرسة.
+- `brain/13-deployment.md` — البيئات · متغيّرات الإنتاج · Docker · الهجرات · Hangfire · CI/CD.
+- `brain/14-testing-strategy.md` — التغطية (35 اختبارًا) · التشغيل · الفجوات (Testcontainers/Playwright).
+- `brain/07` — سطح الـ API الكامل المحدَّث (auth/users/roles/modules/reports/system + الصلاحيات والبوابات).
+- **`progress/PRODUCTION-CHECKLIST.md`** — قائمة جاهزية إنتاج صادقة (✅/🟡/⬜) + خطوات Go-Live.
+- فهرس `brain/` الكامل في دليل الـ onboarding.
+
+**المخرج:** نظام قابل للتسليم — كل متطلّب مربوط بحالته وموقعه في الكود.
+
+
 ## 2026-06-27 — تقارير غير متزامنة (Hangfire) + IFileStorage — إغلاق متطلّب Phase 6
 **ماذا:** توليد التقارير الثقيلة كـ background job بدل داخل الـ request.
 **لماذا:** «لا تُولّد PDF/Excel ضخمًا داخل الـ request» (متطلّب صريح).

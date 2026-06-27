@@ -62,7 +62,7 @@ cd client && npm run build
 ## للمُوجِّهين / الوكلاء الجدد
 ابدأ دائمًا بقراءة **`progress/STATUS.md`** ثم **`brain/09-agent-onboarding.md`**. ما لا يُوثَّق = غير موجود.
 
-> الحالة الحالية: **أول Vertical Slice (إدارة المستخدمين) مكتمل end-to-end** — backend (CRUD + RLS + audit + authz) و frontend (login + جدول + drawer form). التالي: Phase 4 (Template + Module Registry) أو تصليب الـ Primitives.
+> الحالة الحالية: **نظام عامل ومُوثَّق للتسليم.** موديولان (Users + Roles) · RBAC + RLS · Audit · Module Registry لكل قسم · تقارير Excel/PDF (متزامنة + Hangfire) · i18n (AR/EN+RTL) · تصليب (rate limiting/compression/security headers). راجِع **[Production Checklist](progress/PRODUCTION-CHECKLIST.md)** لحالة كل متطلّب، و **[brain/](brain/)** للتوثيق الكامل (00–14).
 
 ### حساب أوّلي (Development seed)
 `admin@ministry.gov` / `Admin@12345` — غيّره فورًا في الإنتاج.

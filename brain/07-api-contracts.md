@@ -44,6 +44,23 @@
 - **refresh token** (7 أيام) يُخزَّن بـ hash؛ التدوير يُبطل القديم؛ إعادة استخدام رمز مُبطَل ⇒ **إبطال السلسلة كلها**.
 - التصريح على endpoints الأعمال عبر سياسة `perm:{code}` (مثال: `.RequirePermission(Permissions.Users.Read)`).
 
+### سطح الـ API الكامل (محدَّث) — `/api/v1`
+كل مسارات الأعمال: `RequireAuthorization` + `RequirePermission(perm)`؛ بعضها خلف بوابة `RequireModule`.
+
+| المجموعة | المسار | التصريح | بوابة |
+|---|---|---|---|
+| auth | `POST /auth/login` · `/refresh` · `/logout` | عام (rate-limit صارم 10/د) | — |
+| auth | `GET /auth/me` | مُصادَق | — |
+| users | `GET /users` · `GET /users/{id}` | `users.read` | `users` |
+| users | `POST /users` · `PUT /users/{id}` · `DELETE /users/{id}` | create/update/delete | `users` |
+| users | `GET /users/export?format=` (متزامن) · `POST /users/export/async` (202) | `users.export` | `users` |
+| roles | `GET /roles` · `GET /roles/{id}` · `GET /roles/permissions` | `roles.read` | `roles` |
+| roles | `POST /roles` · `PUT /roles/{id}` · `DELETE /roles/{id}` | create/update/delete | `roles` |
+| modules | `GET /modules` (الفعّالة لي) | مُصادَق | — |
+| modules | `GET /modules/unit/{id}` · `PUT /modules/{key}` | `modules.read` / `modules.manage` | — |
+| reports | `GET /reports` · `GET /reports/{id}` · `GET /reports/{id}/download` | مُصادَق (معزول) | — |
+| system | `GET /system/info` | عام | — |
+
 ### `GET /health/live` · `GET /health/ready`
 فحوص صحّة. `ready` يفحص الاتصال بقاعدة البيانات (`AddDbContextCheck`).
 

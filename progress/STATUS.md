@@ -1,7 +1,8 @@
 # 📍 STATUS — الحالة الحالية
 
-- **المرحلة الحالية:** توسعة + primitives — موديولان (Users/Roles) + **محرّك تقارير** (Excel/PDF).
+- **المرحلة الحالية:** Phase 7 (التوثيق والتسليم) ✅ — النظام **قابل للتسليم**.
 - **آخر تحديث:** 2026-06-27
+- **التسليم:** `brain/` (00–14) كامل + ERD + Deployment + Testing Strategy + **`progress/PRODUCTION-CHECKLIST.md`**.
 - **التغطية:** Phase 0 ✅ · 1 ✅ · 2 (primitives) 🟡 (DataTable/Drawer/Form + **ReportEngine**) · 3 (Users) ✅ · 4 (Module Registry) ✅ · 5 🟡 (Roles)
 
 ## التصليب للإنتاج (Phase 6 — شبه مكتمل) — مُنجَز

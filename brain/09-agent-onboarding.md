@@ -9,6 +9,10 @@
 4. `brain/05-rls-and-permissions.md` — نموذج العزل (أهم قرار في الـ schema).
 5. `progress/ROADMAP.md` — المراحل وحالتها.
 
+### فهرس `brain/` الكامل
+`00`overview · `01`decisions(ADRs) · `02`glossary · `03`architecture · `04`data-model · `05`rls-and-permissions · `06`module-registry · `07`api-contracts · `08`conventions · `09`onboarding · `10`module-template · `11`performance-and-hardening · `12`erd · `13`deployment · `14`testing-strategy.
+وللتسليم: `progress/PRODUCTION-CHECKLIST.md`.
+
 ## 2. المبادئ التي تتغلّب على أي طلب لاحق
 - لا over-engineering: ميزة لا تُستخدم في 3 شاشات → opt-in لا default.
 - لا تكتب ما توفّره مكتبة مُجرّبة (TanStack, QuestPDF, MediatR).

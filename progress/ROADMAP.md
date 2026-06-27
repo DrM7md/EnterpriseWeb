@@ -9,7 +9,7 @@
 | 4 | استخراج Template + Module Registry | ✅ مكتملة | Module Registry + Feature Flags لكل قسم (حيّ) + قالب موديول موثّق (`brain/10`) |
 | 5 | توسعة الموديولات | 🟡 جارية | موديول Roles مُنجَز بالقالب (بلا migration/infra — أثبت «نصف الوقت») · المزيد عند الحاجة |
 | 6 | التصليب للإنتاج (Hardening) | 🟡 شبه مكتملة | ✅ rate limiting · compression · security headers · gate caching · **Hangfire async reports + IFileStorage** · latency sanity · المتبقّي: output caching · load test · OpenTelemetry · Idempotency |
-| 7 | التوثيق النهائي والتسليم | ⬜ | `brain/` كامل + Production Checklist |
+| 7 | التوثيق النهائي والتسليم | ✅ مكتملة | `brain/` كامل (00–14) + ERD + Deployment + Testing Strategy + **Production Checklist** |
 
 ## القاعدة
 نفّذ مرحلةً مرحلة. **بعد كل مرحلة: حدّث `progress/` و`brain/` وقِف للاعتماد البشري قبل التالية.** لا قفز للأمام.
