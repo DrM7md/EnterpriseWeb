@@ -1,5 +1,6 @@
 import { type ReactNode, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { usePreferencesStore } from '../store/preferencesStore';
 
 /**
  * Drawer جانبي — primitive مشترك للتفاصيل/التعديل. (Phase 2 سيُعاد بناؤه على shadcn/Radix
@@ -17,6 +18,7 @@ export function Drawer({
   children: ReactNode;
 }) {
   const { t } = useTranslation();
+  const addPattern = usePreferencesStore((s) => s.addPattern);
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
     if (open) window.addEventListener('keydown', onKey);
@@ -25,9 +27,11 @@ export function Drawer({
 
   if (!open) return null;
 
+  const modal = addPattern === 'modal';
+
   return (
-    <div className="drawer-overlay" onClick={onClose}>
-      <aside className="drawer" onClick={(e) => e.stopPropagation()} role="dialog" aria-label={title}>
+    <div className={modal ? 'drawer-overlay modal' : 'drawer-overlay'} onClick={onClose}>
+      <aside className={modal ? 'drawer modal' : 'drawer'} onClick={(e) => e.stopPropagation()} role="dialog" aria-label={title}>
         <header className="drawer-head">
           <h2>{title}</h2>
           <button className="icon-btn" onClick={onClose} aria-label={t('common.close')}>✕</button>

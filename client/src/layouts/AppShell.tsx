@@ -3,6 +3,7 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { authService } from '../modules/auth/auth.service';
 import { useModules } from '../modules/modules/modules.api';
 import { useAuthStore } from '../store/authStore';
+import { usePreferencesStore } from '../store/preferencesStore';
 
 /** خريطة مفاتيح الموديولات إلى عناصر التنقّل (التسمية تُترجَم). */
 const NAV: Record<string, { to: string; labelKey: string }> = {
@@ -17,6 +18,8 @@ export function AppShell() {
   const user = useAuthStore((s) => s.user);
   const refreshToken = useAuthStore((s) => s.refreshToken);
   const clear = useAuthStore((s) => s.clear);
+  const theme = usePreferencesStore((s) => s.theme);
+  const toggleTheme = usePreferencesStore((s) => s.toggleTheme);
   const { data: modules } = useModules();
 
   const onLogout = async () => {
@@ -39,12 +42,24 @@ export function AppShell() {
                 {t(NAV[m.key].labelKey)}
               </NavLink>
             ))}
+          <div className="nav-sep" />
+          <NavLink to="/settings" className={({ isActive }) => (isActive ? 'nav active' : 'nav')}>
+            {t('nav.settings')}
+          </NavLink>
         </nav>
       </aside>
       <div className="main">
         <header className="topbar">
           <span className="muted">{user?.fullName} · {user?.roles.join(', ')}</span>
           <div className="topbar-actions">
+            <button
+              className="btn-ghost sm icon-only"
+              onClick={toggleTheme}
+              aria-label={t('common.toggleTheme')}
+              title={t('common.toggleTheme')}
+            >
+              {theme === 'dark' ? '☀️' : '🌙'}
+            </button>
             <button className="btn-ghost sm" onClick={toggleLang}>{t('common.language')}</button>
             <button className="link" onClick={onLogout}>{t('common.logout')}</button>
           </div>

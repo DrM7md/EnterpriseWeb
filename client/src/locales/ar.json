@@ -22,11 +22,14 @@
     "refreshing": "تحديث",
     "close": "إغلاق",
     "actions": "إجراءات",
-    "language": "English"
+    "language": "English",
+    "toggleTheme": "تبديل السمة",
+    "back": "رجوع"
   },
   "nav": {
     "users": "المستخدمون",
-    "roles": "الأدوار"
+    "roles": "الأدوار",
+    "settings": "الإعدادات"
   },
   "auth": {
     "title": "تسجيل الدخول",
@@ -83,6 +86,40 @@
     "field": {
       "name": "اسم الدور",
       "description": "الوصف"
+    }
+  },
+  "settings": {
+    "title": "الإعدادات",
+    "subtitle": "اختر قسمًا لضبط تفضيلاته.",
+    "back": "كل الإعدادات",
+    "comingSoon": "هذا القسم قيد الإعداد وسيُضاف لاحقًا.",
+    "sections": {
+      "appearance": {
+        "title": "إعداد الواجهة",
+        "desc": "السمة (فاتح/داكن) ونمط فتح النماذج."
+      },
+      "dropdowns": {
+        "title": "إعداد القوائم المنسدلة",
+        "desc": "تخصيص خيارات القوائم المنسدلة في النظام."
+      },
+      "notifications": {
+        "title": "إعداد الإشعارات",
+        "desc": "التحكّم في قنوات الإشعارات وتفضيلاتها."
+      }
+    },
+    "appearance": {
+      "theme": "السمة",
+      "themeDesc": "اختر مظهر الواجهة الفاتح أو الداكن.",
+      "themeOption": {
+        "light": "فاتح",
+        "dark": "داكن"
+      },
+      "addPattern": "نمط الإضافة",
+      "addPatternDesc": "طريقة فتح نماذج الإضافة والتعديل.",
+      "addPatternOption": {
+        "drawer": "لوح جانبي",
+        "modal": "نافذة منبثقة"
+      }
     }
   },
   "errors": {
