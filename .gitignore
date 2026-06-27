@@ -1,0 +1,38 @@
+# ---------- .NET ----------
+bin/
+obj/
+*.user
+*.suo
+[Dd]ebug/
+[Rr]elease/
+artifacts/
+.vs/
+*.pidb
+*.svclog
+
+# ---------- Node / Vite ----------
+node_modules/
+client/dist/
+client/.vite/
+*.local
+
+# ---------- Env & secrets ----------
+.env
+.env.*
+!.env.example
+appsettings.*.local.json
+*.pfx
+secrets.json
+
+# ---------- IDE ----------
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# ---------- OS ----------
+.DS_Store
+Thumbs.db
+
+# ---------- Logs ----------
+logs/
+*.log

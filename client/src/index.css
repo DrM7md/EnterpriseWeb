@@ -1,0 +1,2 @@
+/* أنماط أساسية فقط — التصميم الكامل (tokens + shadcn + dark/light) في Phase 2. */
+html, body, #root { min-height: 100%; }

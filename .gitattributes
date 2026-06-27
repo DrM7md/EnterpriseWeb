@@ -1,0 +1,14 @@
+# تطبيع نهايات الأسطر: نص = LF في المستودع، تحويل تلقائي عند الـ checkout على ويندوز.
+* text=auto eol=lf
+
+# ملفات ثنائية — لا تطبيع.
+*.png binary
+*.jpg binary
+*.ico binary
+*.svg text
+*.pfx binary
+
+# سكربتات ويندوز تبقى CRLF.
+*.ps1 text eol=crlf
+*.cmd text eol=crlf
+*.bat text eol=crlf
