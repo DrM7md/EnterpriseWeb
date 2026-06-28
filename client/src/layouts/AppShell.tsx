@@ -6,6 +6,7 @@ import { authService } from '../modules/auth/auth.service';
 import { useModules } from '../modules/modules/modules.api';
 import { useAuthStore } from '../store/authStore';
 import { usePreferencesStore } from '../store/preferencesStore';
+import { useNavVisibilityStore } from '../store/navVisibilityStore';
 import { Button } from '../components/ui/Button';
 import { CommandPalette } from '../components/CommandPalette';
 import { commandShortcut } from '../lib/platform';
@@ -24,11 +25,16 @@ export function AppShell() {
   const collapsed = usePreferencesStore((s) => s.sidebarCollapsed);
   const toggleSidebar = usePreferencesStore((s) => s.toggleSidebar);
   const { data: modules } = useModules();
+  const hidden = useNavVisibilityStore((s) => s.hidden);
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
 
   const enabled = new Set((modules ?? []).filter((m) => m.isEnabled).map((m) => m.key));
-  const visible = (n: NavNode) => !n.moduleKey || enabled.has(n.moduleKey);
-  const tree = NAV_TREE.filter(visible).map((n) => ({ ...n, children: n.children?.filter(visible) }));
+  const hiddenSet = new Set(hidden);
+  const visible = (n: NavNode) => (!n.moduleKey || enabled.has(n.moduleKey)) && !hiddenSet.has(n.key);
+  const tree = NAV_TREE.filter(visible)
+    .map((n) => ({ ...n, children: n.children?.filter(visible) }))
+    // مجموعة فقدت كل أبنائها بالإخفاء ولا مسار لها ⇒ تُزال أيضًا.
+    .filter((n) => n.to || (n.children?.length ?? 0) > 0);
 
   const onLogout = async () => {
     if (refreshToken) await authService.logout(refreshToken).catch(() => undefined);
@@ -126,18 +132,38 @@ function Group({ node, collapsed, open, onToggle, childActive, t }: {
         {!collapsed && <><span className="flex-1 text-start">{t(node.labelKey)}</span>
           <ChevronDown size={15} className={cn('transition-transform', open && 'rotate-180')} /></>}
       </button>
-      {!collapsed && open && (
-        <div className="mt-1 flex flex-col gap-1 border-s border-border ms-5 ps-2">
-          {node.children!.map((c) => {
-            const CIcon = c.icon;
-            return (
-              <NavLink key={c.key} to={c.to!} className={({ isActive }) =>
-                cn('flex items-center gap-2.5 rounded-lg px-3 py-1.5 text-[0.8125rem] transition-colors',
-                  isActive ? 'bg-accent text-accent-fg font-medium' : 'text-muted hover:bg-hover hover:text-fg')}>
-                <CIcon size={15} /> {t(c.labelKey)}
-              </NavLink>
-            );
-          })}
+      {!collapsed && (
+        <div className={cn('grid transition-[grid-template-rows,opacity] duration-300 ease-out',
+          open ? 'mt-1 grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0')}>
+          <div className="overflow-hidden">
+            <div className="relative ms-[1.125rem] flex flex-col py-1">
+              {/* خط السلسلة العمودي */}
+              <span aria-hidden className="pointer-events-none absolute inset-y-2.5 start-[4px] w-px bg-gradient-to-b from-border via-border to-transparent" />
+              {node.children!.map((c, i) => {
+                const CIcon = c.icon;
+                return (
+                  <NavLink key={c.key} to={c.to!}
+                    style={{ transitionDelay: open ? `${i * 45 + 70}ms` : '0ms' }}
+                    className={({ isActive }) =>
+                      cn('group/sub relative flex items-center gap-2.5 rounded-lg py-1.5 pe-3 ps-6 text-[0.8125rem] transition-all duration-300 ease-out',
+                        open ? 'translate-x-0 opacity-100' : 'opacity-0 ltr:translate-x-1.5 rtl:-translate-x-1.5',
+                        isActive ? 'bg-accent/10 font-medium text-accent' : 'text-muted hover:bg-hover hover:text-fg')}>
+                    {({ isActive }) => (
+                      <>
+                        {/* وصلة أفقية بين الخط والعنصر */}
+                        <span aria-hidden className={cn('pointer-events-none absolute start-[4px] top-1/2 h-px w-2.5 -translate-y-1/2 transition-colors duration-300',
+                          isActive ? 'bg-accent' : 'bg-border group-hover/sub:bg-accent/50')} />
+                        {/* عقدة السلسلة */}
+                        <span aria-hidden className={cn('pointer-events-none absolute start-0 top-1/2 size-2 -translate-y-1/2 rounded-full ring-2 ring-panel transition-all duration-300',
+                          isActive ? 'scale-110 bg-accent' : 'bg-border group-hover/sub:scale-110 group-hover/sub:bg-accent')} />
+                        <CIcon size={15} className="shrink-0" /> {t(c.labelKey)}
+                      </>
+                    )}
+                  </NavLink>
+                );
+              })}
+            </div>
+          </div>
         </div>
       )}
     </div>

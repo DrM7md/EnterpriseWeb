@@ -1,12 +1,12 @@
 import { useTranslation } from 'react-i18next';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { Drawer } from '../../components/Drawer';
 import { Button } from '../../components/ui/Button';
 import { Input, Select } from '../../components/ui/Input';
 import { translateApiError } from '../../lib/apiError';
 import {
-  createOrgUnitSchema, editOrgUnitSchema,
+  createOrgUnitSchema, editOrgUnitSchema, genOrgUnitCode,
   useCreateOrgUnit, useUpdateOrgUnit,
   type CreateOrgUnitForm, type EditOrgUnitForm,
 } from './orgunits.api';
@@ -40,24 +40,31 @@ function Field({ label, error, children }: { readonly label: string; readonly er
 function CreateForm({ units, onDone }: { readonly units: OrgUnitListItem[]; readonly onDone: () => void }) {
   const { t } = useTranslation();
   const create = useCreateOrgUnit();
-  const { register, handleSubmit, setError, formState: { errors, isSubmitting } } =
+  const { register, handleSubmit, setError, control, formState: { errors, isSubmitting } } =
     useForm<CreateOrgUnitForm>({ resolver: zodResolver(createOrgUnitSchema), defaultValues: { parentId: null } });
 
+  const parentId = useWatch({ control, name: 'parentId' });
+  const code = genOrgUnitCode(parentId ?? null, units);
+
   const onSubmit = handleSubmit(async (values) => {
-    try { await create.mutateAsync(values); onDone(); }
+    try { await create.mutateAsync({ name: values.name, parentId: values.parentId, units }); onDone(); }
     catch (e) { setError('root', { message: translateApiError(e) }); }
   });
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-4">
       <Field label={t('orgUnits.field.name')} error={errors.name?.message}><Input {...register('name')} /></Field>
-      <Field label={t('orgUnits.field.code')} error={errors.code?.message}><Input {...register('code')} /></Field>
       <Field label={t('orgUnits.field.parent')} error={errors.parentId?.message}>
         <Select {...register('parentId', { setValueAs: (v) => (v === '' || v == null ? null : Number(v)) })}>
           <option value="">{t('orgUnits.noParent')}</option>
           {units.map((u) => <option key={u.id} value={u.id}>{'— '.repeat(u.level)}{u.name}</option>)}
         </Select>
       </Field>
+      <p className="flex items-center gap-2 text-[0.8125rem] text-muted">
+        {t('orgUnits.field.code')}:
+        <code className="rounded-md bg-[var(--code-bg)] px-1.5 py-0.5 text-[0.75rem] text-fg">{code}</code>
+        <span className="text-xs text-muted/70">({t('orgUnits.codeAuto')})</span>
+      </p>
       {errors.root && <p className="text-[0.8125rem] text-danger">{errors.root.message}</p>}
       <Button type="submit" disabled={isSubmitting} className="mt-1">{isSubmitting ? '…' : t('common.create')}</Button>
     </form>

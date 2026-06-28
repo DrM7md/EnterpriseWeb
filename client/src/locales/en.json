@@ -3,6 +3,8 @@
   "common": {
     "save": "Save",
     "create": "Create",
+    "add": "Add",
+    "cancel": "Cancel",
     "edit": "Edit",
     "view": "View",
     "delete": "Delete",
@@ -35,15 +37,19 @@
     "collapse": "Collapse/expand menu",
     "guidance": {
       "title": "Educational Guidance",
-      "supervisors": "Supervisors",
-      "visits": "Supervisory Visits",
-      "reports": "Guidance Reports"
+      "sections": "Sections",
+      "schools": "Schools",
+      "coordinators": "Coordinators"
     }
   },
   "guidance": {
-    "supervisorsDesc": "Manage educational supervisors and their assignments.",
-    "visitsDesc": "Schedule and record supervisory school visits.",
-    "reportsDesc": "Educational guidance performance reports."
+    "sectionsDesc": "Educational guidance sections.",
+    "schoolsDesc": "Schools under educational guidance.",
+    "coordinatorsDesc": "Educational guidance coordinators."
+  },
+  "noAccess": {
+    "title": "Access restricted",
+    "message": "This page is not available to you right now. Please contact the responsible administration."
   },
   "table": {
     "columns": "Columns",
@@ -62,6 +68,12 @@
     "title": "Organizational Units",
     "subtitle": "Ministry structure — each unit owns its records (isolation basis).",
     "new": "+ New unit",
+    "quickRoot": "Quick add",
+    "addChild": "Add sub-unit",
+    "expand": "Expand",
+    "collapse": "Collapse",
+    "quickPlaceholder": "Sub-unit name… then Enter",
+    "codeAuto": "auto",
     "createTitle": "New organizational unit",
     "editTitle": "Edit unit",
     "noParent": "— No parent (top level) —",
@@ -141,6 +153,10 @@
         "title": "Interface settings",
         "desc": "Theme, font, size, and how forms open."
       },
+      "sidebar": {
+        "title": "Sidebar management",
+        "desc": "Show or hide sidebar items."
+      },
       "uploads": {
         "title": "File uploads",
         "desc": "Try chunked upload of large files."
@@ -188,6 +204,10 @@
       "uploading": "Uploading…",
       "done": "Uploaded \"{{name}}\" ({{size}} KB)",
       "failed": "Upload failed."
+    },
+    "sidebar": {
+      "hiddenTag": "Hidden",
+      "note": "A hidden item disappears from the sidebar, and any direct access to its route shows the access-restricted message. \"Settings\" cannot be hidden to avoid locking yourself out."
     }
   },
   "errors": {
@@ -201,6 +221,11 @@
     "role.not_found": "Role not found.",
     "role.name_taken": "Role name already in use.",
     "role.system_locked": "System roles cannot be modified or deleted.",
+    "org_unit.not_found": "Organizational unit not found.",
+    "org_unit.parent_not_found": "Parent unit not found.",
+    "org_unit.code_taken": "Unit code is already in use.",
+    "org_unit.has_children": "Cannot delete a unit that has sub-units — delete its branches first.",
+    "org_unit.has_users": "Cannot delete a unit linked to users — reassign its users first.",
     "module.disabled": "This module is not enabled for your unit.",
     "module.core_locked": "A core module cannot be disabled.",
     "internal_error": "An unexpected error occurred."

@@ -6,6 +6,7 @@ import {
   Building2, Languages, LogOut, Moon, Settings, ShieldCheck, Sun, Users, Search, type LucideIcon,
 } from 'lucide-react';
 import { useModules } from '../modules/modules/modules.api';
+import { useNavVisibilityStore } from '../store/navVisibilityStore';
 import { usePreferencesStore } from '../store/preferencesStore';
 import { useAuthStore } from '../store/authStore';
 import { authService } from '../modules/auth/auth.service';
@@ -22,6 +23,7 @@ export function CommandPalette() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { data: modules } = useModules();
+  const hidden = useNavVisibilityStore((s) => s.hidden);
   const theme = usePreferencesStore((s) => s.theme);
   const toggleTheme = usePreferencesStore((s) => s.toggleTheme);
   const refreshToken = useAuthStore((s) => s.refreshToken);
@@ -52,7 +54,7 @@ export function CommandPalette() {
     navigate('/login', { replace: true });
   };
 
-  const navItems = (modules ?? []).filter((m) => m.isEnabled && NAV_ICONS[m.key]);
+  const navItems = (modules ?? []).filter((m) => m.isEnabled && NAV_ICONS[m.key] && !hidden.includes(m.key));
 
   if (!open) return null;
 

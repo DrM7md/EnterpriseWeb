@@ -20,7 +20,9 @@ export function SettingsPage() {
           <Link key={s.key} to={`/settings/${s.key}`}>
             <Card className="group flex h-full flex-col gap-1.5 p-5 transition-colors hover:border-accent">
               <div className="flex items-center justify-between">
-                <span className="text-2xl" aria-hidden>{s.icon}</span>
+                <span className="grid size-10 place-items-center rounded-xl bg-accent/10 text-accent" aria-hidden>
+                  <s.icon size={20} strokeWidth={2} />
+                </span>
                 <ChevronLeft size={16} className="text-muted transition-transform group-hover:-translate-x-0.5 rtl:rotate-180" />
               </div>
               <h3 className="text-[0.9375rem] font-semibold">{t(`settings.sections.${s.key}.title`)}</h3>
